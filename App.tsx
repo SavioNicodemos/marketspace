@@ -6,26 +6,17 @@ import {
   Karla_400Regular as Karla400Regular,
   Karla_700Bold as Karla700Bold,
 } from '@expo-google-fonts/karla';
+import { NativeBaseProvider } from 'native-base';
+import Loading from '@components/Loading';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Karla400Regular, Karla700Bold });
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <NativeBaseProvider>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-      {fontsLoaded ? (
-        <Text>Open up App.tsx to start working on your app!</Text>
-      ) : (
-        <View />
-      )}
-    </View>
+      {fontsLoaded ? <View /> : <Loading />}
+    </NativeBaseProvider>
   );
 }
