@@ -8,7 +8,7 @@ import {
 import { NativeBaseProvider } from 'native-base';
 import Loading from '@components/Loading';
 
-import { SignIn } from '@screens/SignIn';
+import { SignUp } from '@screens/SignUp';
 import THEME from './src/theme';
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
     <NativeBaseProvider theme={THEME}>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-      {fontsLoaded ? <SignIn /> : <Loading />}
+      {fontsLoaded ? <SignUp /> : <Loading />}
     </NativeBaseProvider>
   );
 }
