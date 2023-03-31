@@ -1,6 +1,5 @@
 /* eslint-disable react/style-prop-object */
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
 import {
   useFonts,
   Karla_400Regular as Karla400Regular,
@@ -9,6 +8,7 @@ import {
 import { NativeBaseProvider } from 'native-base';
 import Loading from '@components/Loading';
 
+import { SignIn } from '@screens/SignIn';
 import THEME from './src/theme';
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
     <NativeBaseProvider theme={THEME}>
       <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-      {!fontsLoaded ? <View /> : <Loading />}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </NativeBaseProvider>
   );
 }
