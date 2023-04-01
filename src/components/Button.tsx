@@ -1,14 +1,18 @@
 /* eslint-disable no-nested-ternary */
-import { Button as NativeBaseButton, IButtonProps, Text } from 'native-base';
+import { Pressable, Text, Icon, IPressableProps } from 'native-base';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Feather } from '@expo/vector-icons';
 
-type Props = IButtonProps & {
+type Props = IPressableProps & {
   title: string;
   variant?: 'blue' | 'primary' | 'secondary';
+  icon?: keyof typeof Feather.glyphMap;
 };
 
-export function Button({ title, variant = 'primary', ...rest }: Props) {
+export function Button({ title, variant = 'primary', icon, ...rest }: Props) {
+  const textColor = variant === 'secondary' ? 'gray.200' : 'gray.700';
   return (
-    <NativeBaseButton
+    <Pressable
       w="full"
       h={12}
       bg={
@@ -28,15 +32,17 @@ export function Button({ title, variant = 'primary', ...rest }: Props) {
             ? 'gray.200'
             : 'gray.600',
       }}
+      flexDir="row"
+      alignItems="center"
+      justifyContent="center"
       {...rest}
     >
-      <Text
-        color={variant === 'secondary' ? 'gray.200' : 'gray.700'}
-        fontFamily="heading"
-        fontSize="sm"
-      >
+      {icon ? (
+        <Icon as={Feather} name={icon} color="white" size={5} mr={2} />
+      ) : null}
+      <Text color={textColor} fontFamily="heading" fontSize="sm">
         {title}
       </Text>
-    </NativeBaseButton>
+    </Pressable>
   );
 }
