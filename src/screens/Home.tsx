@@ -3,11 +3,12 @@ import { UserPhoto } from '@components/UserPhoto';
 import { Box, HStack, Heading, Text, VStack, Icon } from 'native-base';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
+import { Input } from '@components/Input';
 
 export function Home() {
   return (
-    <VStack>
-      <HStack mt={16} mx={6} justifyContent="center">
+    <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
+      <HStack justifyContent="center">
         <UserPhoto
           size={12}
           mr={2}
@@ -22,7 +23,7 @@ export function Home() {
         </Box>
       </HStack>
 
-      <VStack mx="6" mt="8">
+      <VStack mt="8">
         <Text color="gray.300" fontSize="sm" mb="3">
           Seus produtos anunciados para venda
         </Text>
@@ -49,6 +50,14 @@ export function Home() {
             <Icon as={Feather} name="arrow-right" color="blue.700" size="sm" />
           </Box>
         </HStack>
+      </VStack>
+
+      <VStack mt="8">
+        <Text color="gray.300" fontSize="sm" mb="3">
+          Compre produtos variados
+        </Text>
+
+        <Input placeholder="Buscar anúncio" searchBar />
       </VStack>
     </VStack>
   );
