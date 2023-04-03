@@ -1,9 +1,59 @@
 import { Button } from '@components/Button';
 import { UserPhoto } from '@components/UserPhoto';
-import { Box, HStack, Heading, Text, VStack, Icon } from 'native-base';
+import {
+  Box,
+  HStack,
+  Heading,
+  Text,
+  VStack,
+  Icon,
+  FlatList,
+} from 'native-base';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
+import { ProductListCard } from '@components/ProductListCard';
+
+const productList = [
+  {
+    id: '33d40919-8a12-42b3-bcba-a67f29cf6e7c',
+    name: 'Tênis Vermelho',
+    price: 5990,
+    is_new: false,
+    accept_trade: false,
+    product_images: [],
+    payment_methods: [
+      {
+        key: 'pix',
+        name: 'Pix',
+      },
+      {
+        key: 'card',
+        name: 'Cartão de Crédito',
+      },
+    ],
+    user: {
+      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
+    },
+  },
+  {
+    id: 'f17e4861-59dd-4fd5-870c-2a4c104e06b9',
+    name: 'Luminária Pendente',
+    price: 4500,
+    is_new: true,
+    accept_trade: true,
+    product_images: [],
+    payment_methods: [
+      {
+        key: 'pix',
+        name: 'Pix',
+      },
+    ],
+    user: {
+      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
+    },
+  },
+];
 
 export function Home() {
   return (
@@ -58,6 +108,12 @@ export function Home() {
         </Text>
 
         <Input placeholder="Buscar anúncio" searchBar />
+
+        <FlatList
+          data={productList}
+          renderItem={({ item }) => <ProductListCard />}
+          numColumns={2}
+        />
       </VStack>
     </VStack>
   );
