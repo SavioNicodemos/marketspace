@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
-import { ProductListCard } from '@components/ProductListCard';
+import { AdCard } from '@components/AdCard';
 
 const productList = [
   {
@@ -21,7 +21,7 @@ const productList = [
     price: 5990,
     is_new: false,
     accept_trade: false,
-    product_images: [],
+    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
     payment_methods: [
       {
         key: 'pix',
@@ -42,7 +42,24 @@ const productList = [
     price: 4500,
     is_new: true,
     accept_trade: true,
-    product_images: [],
+    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
+    payment_methods: [
+      {
+        key: 'pix',
+        name: 'Pix',
+      },
+    ],
+    user: {
+      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
+    },
+  },
+  {
+    id: 'f17e4861-59dd-4fd5-870c-2a4c104e06b8',
+    name: 'Luminária Pendente',
+    price: 4500,
+    is_new: true,
+    accept_trade: true,
+    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
     payment_methods: [
       {
         key: 'pix',
@@ -111,7 +128,20 @@ export function Home() {
 
         <FlatList
           data={productList}
-          renderItem={({ item }) => <ProductListCard />}
+          keyExtractor={item => item.id}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'space-between',
+          }}
+          renderItem={({ item }) => (
+            <AdCard
+              name={item.name}
+              isNew={item.is_new}
+              price={item.price}
+              userPhoto={item.user.avatar}
+              productImage={item.product_images[0]}
+            />
+          )}
           numColumns={2}
         />
       </VStack>
