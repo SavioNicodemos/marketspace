@@ -17,6 +17,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
 import { AdCard } from '@components/AdCard';
+import { FilterChip } from '@components/FilterChip';
 import { useState } from 'react';
 
 const productList = [
@@ -177,6 +178,7 @@ export function Home() {
           px="6"
           borderTopLeftRadius="3xl"
           borderTopRightRadius="3xl"
+          space="5"
         >
           <HStack alignItems="center" justifyContent="space-between">
             <Heading color="gray.100" fontSize="lg">
@@ -187,16 +189,24 @@ export function Home() {
               icon={<Icon as={Feather} name="x" color="gray.400" size="lg" />}
             />
           </HStack>
-          <VStack>
-            <Text>Condição</Text>
-            <HStack>
-              <Text>Novo</Text>
-              <Text>Usado</Text>
+          <VStack space={3}>
+            <Text fontSize="sm" fontWeight="bold">
+              Condição
+            </Text>
+            <HStack space={2}>
+              <FilterChip title="Novo" />
+              <FilterChip title="Usado" />
             </HStack>
           </VStack>
           <VStack alignItems="flex-start">
-            <Text>Aceita troca?</Text>
-            <Switch />
+            <Text fontSize="sm" fontWeight="bold">
+              Aceita troca?
+            </Text>
+            <Switch
+              offTrackColor="gray.500"
+              thumbColor="white"
+              onTrackColor="blue.500"
+            />
           </VStack>
           <VStack space={2}>
             <HStack alignItems="baseline">
@@ -210,24 +220,44 @@ export function Home() {
                 setGroupValue(values || []);
               }}
             >
-              <Checkbox value="Boleto" my="1">
+              <Checkbox
+                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
+                value="Boleto"
+                my="1"
+              >
                 Boleto
               </Checkbox>
-              <Checkbox value="Pix" my="1">
+              <Checkbox
+                value="Pix"
+                my="1"
+                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
+              >
                 Pix
               </Checkbox>
-              <Checkbox value="Dinheiro" my="1">
+              <Checkbox
+                value="Dinheiro"
+                my="1"
+                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
+              >
                 Dinheiro
               </Checkbox>
-              <Checkbox value="Cartão de crédito" my="1">
+              <Checkbox
+                value="Cartão de crédito"
+                my="1"
+                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
+              >
                 Cartão de crédito
               </Checkbox>
-              <Checkbox value="Depósito Bancário" my="1">
+              <Checkbox
+                value="Depósito Bancário"
+                my="1"
+                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
+              >
                 Depósito Bancário
               </Checkbox>
             </Checkbox.Group>
           </VStack>
-          <HStack space={2}>
+          <HStack space={2} mt="4">
             <Button title="Resetar filtros" variant="secondary" flex={1} />
             <Button title="Aplicar filtros" flex={1} />
           </HStack>
