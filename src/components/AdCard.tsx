@@ -1,15 +1,23 @@
-import { HStack, Image, Pressable, Text, VStack } from 'native-base';
+import { Box, HStack, Image, Pressable, Text, VStack } from 'native-base';
 import { UserPhoto } from './UserPhoto';
 
 type Props = {
-  userPhoto: string;
+  userPhoto?: string;
   isNew: boolean;
   productImage: string;
   name: string;
   price: number;
+  adIsDisabled?: boolean;
 };
 
-export function AdCard({ isNew, name, price, productImage, userPhoto }: Props) {
+export function AdCard({
+  isNew,
+  name,
+  price,
+  productImage,
+  userPhoto,
+  adIsDisabled,
+}: Props) {
   const formattedPrice = (price / 100).toFixed(2);
   return (
     <Pressable
@@ -33,14 +41,19 @@ export function AdCard({ isNew, name, price, productImage, userPhoto }: Props) {
         />
 
         <HStack alignItems="center" justifyContent="space-between" p={2}>
-          <UserPhoto
-            size={7}
-            borderWidth={2}
-            borderColor="white"
-            source={{
-              uri: `http://192.168.1.66:3333/images/${userPhoto}`,
-            }}
-          />
+          {userPhoto ? (
+            <UserPhoto
+              position="absolute"
+              left="2"
+              top="2"
+              size={7}
+              borderWidth={2}
+              borderColor="white"
+              source={{
+                uri: `${userPhoto}`,
+              }}
+            />
+          ) : null}
           <Text
             px="2"
             py="0.5"
@@ -49,16 +62,29 @@ export function AdCard({ isNew, name, price, productImage, userPhoto }: Props) {
             rounded="full"
             bg={isNew ? 'blue.700' : 'gray.200'}
             color="white"
-            ml="2"
+            top={2}
+            right={2}
+            position="absolute"
           >
             {isNew ? 'NOVO' : 'USADO'}
           </Text>
         </HStack>
+        {adIsDisabled ? (
+          <Box bg="#1A181B3D" flex="1" mt={-4} p={2} justifyContent="flex-end">
+            <Text color="white" fontSize="xs" fontWeight="bold">
+              {'Anúncio desativado'.toUpperCase()}
+            </Text>
+          </Box>
+        ) : null}
       </VStack>
-      <Text color="gray.200" fontSize="sm">
+      <Text color={adIsDisabled ? 'gray.400' : 'gray.200'} fontSize="sm">
         {name}
       </Text>
-      <Text fontWeight="bold" fontSize="md">
+      <Text
+        color={adIsDisabled ? 'gray.400' : 'gray.100'}
+        fontWeight="bold"
+        fontSize="md"
+      >
         R$ {formattedPrice}
       </Text>
     </Pressable>
