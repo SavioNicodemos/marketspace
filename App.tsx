@@ -8,16 +8,19 @@ import {
 import { NativeBaseProvider } from 'native-base';
 import Loading from '@components/Loading';
 
-import { MyAds } from '@screens/MyAds';
+import { Ad } from '@screens/Ad';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import THEME from './src/theme';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Karla400Regular, Karla700Bold });
   return (
-    <NativeBaseProvider theme={THEME}>
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NativeBaseProvider theme={THEME}>
+        <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-      {fontsLoaded ? <MyAds /> : <Loading />}
-    </NativeBaseProvider>
+        {fontsLoaded ? <Ad /> : <Loading />}
+      </NativeBaseProvider>
+    </GestureHandlerRootView>
   );
 }
