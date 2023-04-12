@@ -8,7 +8,6 @@ import {
   Icon,
   IconButton,
 } from 'native-base';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';

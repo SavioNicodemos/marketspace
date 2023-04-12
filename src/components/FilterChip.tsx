@@ -1,5 +1,4 @@
 import { HStack, Text, Icon, Pressable } from 'native-base';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Octicons } from '@expo/vector-icons';
 import { useState } from 'react';
 

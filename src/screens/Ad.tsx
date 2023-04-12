@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { HStack, VStack, Icon, IconButton, Heading, Box } from 'native-base';
 import { Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';

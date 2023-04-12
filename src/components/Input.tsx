@@ -8,7 +8,6 @@ import {
   IconButton,
 } from 'native-base';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 
 type Props = IInputProps & {

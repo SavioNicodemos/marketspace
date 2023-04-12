@@ -1,6 +1,5 @@
 /* eslint-disable no-nested-ternary */
 import { Pressable, Text, Icon, IPressableProps } from 'native-base';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Feather } from '@expo/vector-icons';
 
 type Props = IPressableProps & {
