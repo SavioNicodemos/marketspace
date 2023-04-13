@@ -1,13 +1,14 @@
-import { HStack, View, Image, Center } from 'native-base';
+import { HStack, View, Image, Center, Box, Text } from 'native-base';
 import Carousel from 'react-native-reanimated-carousel';
 import { useState } from 'react';
 import { Dimensions } from 'react-native';
 
 type Props = {
   images: string[];
+  adIsDisabled?: boolean;
 };
 
-export function ImageCarousel({ images }: Props) {
+export function ImageCarousel({ images, adIsDisabled }: Props) {
   const { width } = Dimensions.get('window');
   const [viewingImageIndex, setViewingImageIndex] = useState(0);
   return (
@@ -40,6 +41,23 @@ export function ImageCarousel({ images }: Props) {
               width="full"
               h="full"
             />
+            {adIsDisabled ? (
+              <Box
+                bg="#0000006D"
+                height={307}
+                width={400}
+                mt={-4}
+                p={2}
+                justifyContent="center"
+                zIndex={2}
+                position="absolute"
+                alignItems="center"
+              >
+                <Text color="white" fontSize="xs" fontWeight="bold">
+                  {'Anúncio desativado'.toUpperCase()}
+                </Text>
+              </Box>
+            ) : null}
           </View>
         )}
       />

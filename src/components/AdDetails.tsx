@@ -11,7 +11,10 @@ type Props = {
 export function AdDetails({ product }: Props) {
   return (
     <VStack flex={1}>
-      <ImageCarousel images={product.product_images} />
+      <ImageCarousel
+        images={product.product_images}
+        adIsDisabled={'is_active' in product ? !product.is_active : false}
+      />
       <ScrollView
         px={6}
         py={6}

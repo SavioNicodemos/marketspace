@@ -12,7 +12,7 @@ const product = {
   price: 4500,
   accept_trade: true,
   user_id: 'cab6e6f2-a201-4682-8da4-1d517261da1d',
-  is_active: true,
+  is_active: false,
   created_at: '2023-04-10T23:10:27.531Z',
   updated_at: '2023-04-10T23:10:27.531Z',
   product_images: [
@@ -40,46 +40,85 @@ const product = {
 };
 
 export function Ad() {
+  const isMyAd = true;
   return (
     <VStack bgColor="gray.600" flex={1} pt={12}>
-      <HStack px={6}>
+      <HStack px={6} justifyContent="space-between">
         <IconButton
           rounded="full"
           icon={
             <Icon as={Feather} name="arrow-left" color="gray.100" size="lg" />
           }
         />
+        {isMyAd ? (
+          <IconButton
+            rounded="full"
+            icon={
+              <Icon as={Feather} name="edit-3" color="gray.100" size="lg" />
+            }
+          />
+        ) : null}
       </HStack>
 
       <AdDetails product={product} />
 
-      <HStack
-        justifyContent="space-between"
-        bg="white"
-        pt={Platform.OS === 'ios' ? 4 : 8}
-        pb={8}
-        alignItems="center"
-        px="6"
-      >
-        <Box flexDir="row" alignItems="baseline">
-          <Heading color="blue.700" fontSize="sm" mr="1" fontFamily="heading">
-            R$
-          </Heading>
-          <Heading color="blue.700" fontSize="2xl" fontFamily="heading">
-            {(product.price / 100).toLocaleString('pt-BR', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </Heading>
-        </Box>
-        <Button
-          icon="message-circle"
-          title="Entrar em contato"
-          variant="blue"
-          maxWidth={200}
-          px={4}
-        />
-      </HStack>
+      {isMyAd ? (
+        <HStack
+          justifyContent="space-between"
+          bg="white"
+          pt={4}
+          pb={8}
+          alignItems="center"
+          px="6"
+          flexDir="column"
+          space={4}
+        >
+          <VStack>
+            <Button
+              title="Desativar anúncio"
+              icon="power"
+              variant="primary"
+              minW={360}
+            />
+          </VStack>
+          <VStack mt={3}>
+            <Button
+              title="Excluir anúncio"
+              icon="trash"
+              variant="secondary"
+              minW={360}
+            />
+          </VStack>
+        </HStack>
+      ) : (
+        <HStack
+          justifyContent="space-between"
+          bg="white"
+          pt={Platform.OS === 'ios' ? 4 : 8}
+          pb={8}
+          alignItems="center"
+          px="6"
+        >
+          <Box flexDir="row" alignItems="baseline">
+            <Heading color="blue.700" fontSize="sm" mr="1" fontFamily="heading">
+              R$
+            </Heading>
+            <Heading color="blue.700" fontSize="2xl" fontFamily="heading">
+              {(product.price / 100).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </Heading>
+          </Box>
+          <Button
+            icon="message-circle"
+            title="Entrar em contato"
+            variant="blue"
+            maxWidth={200}
+            px={4}
+          />
+        </HStack>
+      )}
     </VStack>
   );
 }
