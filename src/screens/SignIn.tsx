@@ -37,15 +37,15 @@ export function SignIn() {
               mt={4}
             />
             <Input placeholder="Senha" isInvalid={false} />
-            <Button title="Entrar" variant="blue" mb="16" mt="4" />
           </Center>
+          <Button title="Entrar" variant="blue" mb="16" mt="4" mx={12} />
         </VStack>
         <Center px={12} mt={16}>
           <Text color="gray.200" fontSize="sm">
             Ainda não tem acesso?
           </Text>
-          <Button title="Criar uma conta" variant="secondary" mt="4" />
         </Center>
+        <Button title="Criar uma conta" variant="secondary" mt="4" mx={12} />
       </VStack>
     </ScrollView>
   );

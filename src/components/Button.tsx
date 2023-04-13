@@ -12,7 +12,8 @@ export function Button({ title, variant = 'primary', icon, ...rest }: Props) {
   const textColor = variant === 'secondary' ? 'gray.200' : 'gray.700';
   return (
     <Pressable
-      w="full"
+      flex={1}
+      maxH={12}
       h={12}
       bg={
         variant === 'blue'
@@ -37,7 +38,13 @@ export function Button({ title, variant = 'primary', icon, ...rest }: Props) {
       {...rest}
     >
       {icon ? (
-        <Icon as={Feather} name={icon} color="white" size={5} mr={2} />
+        <Icon
+          as={Feather}
+          name={icon}
+          color={variant === 'secondary' ? 'black' : 'white'}
+          size={5}
+          mr={2}
+        />
       ) : null}
       <Text color={textColor} fontFamily="heading" fontSize="sm">
         {title}

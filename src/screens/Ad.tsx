@@ -7,8 +7,7 @@ import { AdDetails } from '@components/AdDetails';
 const product = {
   id: 'e81de72d-34b3-4c2a-8096-25d3904cf100',
   name: 'Luminária Pendente',
-  description:
-    'Essa é a melhor luminária do mundo. Você não vai se arrependerEssa é a melhor luminária do mundo. Você não vai se arrependerEssa é a melhor luminária do mundo. Você não vai se arrependerEssa é a melhor luminária do mundo. Você não vai se arrepender',
+  description: 'Essa é a melhor luminária do mundo. Você não vai se arrepender',
   is_new: true,
   price: 4500,
   accept_trade: true,
@@ -73,15 +72,13 @@ export function Ad() {
             })}
           </Heading>
         </Box>
-        <VStack>
-          <Button
-            icon="message-circle"
-            title="Entrar em contato"
-            variant="blue"
-            maxWidth={200}
-            px={4}
-          />
-        </VStack>
+        <Button
+          icon="message-circle"
+          title="Entrar em contato"
+          variant="blue"
+          maxWidth={200}
+          px={4}
+        />
       </HStack>
     </VStack>
   );
