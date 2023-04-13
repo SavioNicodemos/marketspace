@@ -12,8 +12,15 @@ export function AdDetails({ product }: Props) {
   return (
     <VStack flex={1}>
       <ImageCarousel images={product.product_images} />
-      <ScrollView px={6} py={6} flex={1} showsVerticalScrollIndicator={false}>
-        <HStack mb={6}>
+      <ScrollView
+        px={6}
+        py={6}
+        flex={1}
+        showsVerticalScrollIndicator={false}
+        bg="gray.600"
+        mt={-5}
+      >
+        <HStack mb={6} mt={5}>
           <UserPhoto
             size={6}
             borderWidth={2}

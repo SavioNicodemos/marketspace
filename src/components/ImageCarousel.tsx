@@ -11,7 +11,7 @@ export function ImageCarousel({ images }: Props) {
   const { width } = Dimensions.get('window');
   const [viewingImageIndex, setViewingImageIndex] = useState(0);
   return (
-    <>
+    <View zIndex={1}>
       <Carousel
         width={width}
         height={width / 1.34}
@@ -56,6 +56,6 @@ export function ImageCarousel({ images }: Props) {
           ))}
         </HStack>
       </Center>
-    </>
+    </View>
   );
 }
