@@ -8,7 +8,7 @@ import {
 import { NativeBaseProvider } from 'native-base';
 import Loading from '@components/Loading';
 
-import { CreateAd } from '@screens/CreateAd';
+import { Routes } from '@routes/index';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import THEME from './src/theme';
 
@@ -19,7 +19,7 @@ export default function App() {
       <NativeBaseProvider theme={THEME}>
         <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-        {fontsLoaded ? <CreateAd /> : <Loading />}
+        {fontsLoaded ? <Routes /> : <Loading />}
       </NativeBaseProvider>
     </GestureHandlerRootView>
   );

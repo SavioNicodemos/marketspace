@@ -2,8 +2,16 @@ import { ScrollView, VStack, Center, Text, Heading } from 'native-base';
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
 export function SignIn() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const handleNewAccount = () => {
+    navigation.navigate('signUp');
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -45,7 +53,13 @@ export function SignIn() {
             Ainda não tem acesso?
           </Text>
         </Center>
-        <Button title="Criar uma conta" variant="secondary" mt="4" mx={12} />
+        <Button
+          title="Criar uma conta"
+          variant="secondary"
+          mt="4"
+          mx={12}
+          onPress={handleNewAccount}
+        />
       </VStack>
     </ScrollView>
   );

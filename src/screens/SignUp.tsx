@@ -15,10 +15,17 @@ import { Button } from '@components/Button';
 import { UserPhoto } from '@components/UserPhoto';
 
 import defaultImage from '@assets/defaultAvatar.png';
+import { useNavigation } from '@react-navigation/native';
 
 const PHOTO_SIZE = 24;
 
 export function SignUp() {
+  const navigation = useNavigation();
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -74,7 +81,12 @@ export function SignUp() {
         <Text color="gray.200" fontSize="sm" mt={12} textAlign="center">
           Já tem uma conta?
         </Text>
-        <Button title="Ir para o login" variant="secondary" mt="4" />
+        <Button
+          title="Ir para o login"
+          variant="secondary"
+          mt="4"
+          onPress={handleGoBack}
+        />
       </VStack>
     </ScrollView>
   );
