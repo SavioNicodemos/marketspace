@@ -14,6 +14,8 @@ import { Input } from '@components/Input';
 import { AdCard } from '@components/AdCard';
 import { useState } from 'react';
 import { FiltersModal } from '@components/FiltersModal';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
+import { useNavigation } from '@react-navigation/native';
 
 const productList = [
   {
@@ -76,6 +78,12 @@ const productList = [
 export function Home() {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const handleGoToCreateAdd = () => {
+    navigation.navigate('createAd');
+  };
+
   return (
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
@@ -90,7 +98,11 @@ export function Home() {
             <Heading fontSize="md">Nicodemos</Heading>
           </VStack>
           <Box flex={1} pl={12}>
-            <Button title="Criar anúncio" icon="plus" />
+            <Button
+              title="Criar anúncio"
+              icon="plus"
+              onPress={handleGoToCreateAdd}
+            />
           </Box>
         </HStack>
 

@@ -1,7 +1,8 @@
+/* eslint-disable import/extensions */
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { Box, useTheme } from 'native-base';
-import { AuthRoutes } from './auth.routes.tsx';
-import { AppRoutes } from './app.routes.tsx';
+// import { AuthRoutes } from './auth.routes';
+import { AppRoutes } from './app.routes';
 
 export function Routes() {
   const { colors } = useTheme();

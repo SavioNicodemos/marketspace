@@ -1,109 +1,32 @@
-/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable import/extensions */
 import {
-  createBottomTabNavigator,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-import { Home } from '@screens/Home';
-import { MyAds } from '@screens/MyAds';
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 import { CreateAd } from '@screens/CreateAd';
-import { AdPreview } from '@screens/AdPreview';
 import { Ad } from '@screens/Ad';
-import { useTheme, Pressable } from 'native-base';
-import { Octicons } from '@expo/vector-icons';
+import { AdPreview } from '@screens/AdPreview';
+import { NavigatorScreenParams } from '@react-navigation/native';
+import { HomeRoutes, BottomTabRoutes } from './home.routes';
 
-type AppRoutes = {
-  home: undefined;
-  myAds: undefined;
+export type MainNavRoutes = {
+  MainNav: NavigatorScreenParams<BottomTabRoutes>;
   createAd: undefined;
   ad: undefined;
   adPreview: undefined;
-  logout: undefined;
 };
 
-export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+export type AuthNavigatorRoutesProps = NativeStackNavigationProp<MainNavRoutes>;
 
-const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
-
-function LogoutComponent() {
-  return null;
-}
+const Stack = createNativeStackNavigator<MainNavRoutes>();
 
 export function AppRoutes() {
-  const { sizes, colors } = useTheme();
-  const iconSize = sizes[6];
   return (
-    <Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: colors.gray[200],
-        tabBarInactiveTintColor: colors.gray[400],
-      }}
-    >
-      <Screen
-        name="home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Octicons name="home" color={color} size={iconSize} />
-          ),
-        }}
-      />
-
-      <Screen
-        name="myAds"
-        component={MyAds}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Octicons name="tag" color={color} size={iconSize} />
-          ),
-        }}
-      />
-
-      <Screen
-        name="logout"
-        component={LogoutComponent}
-        options={{
-          tabBarButton: () => (
-            <Pressable
-              pt="3"
-              pr="4"
-              onPress={() => null}
-              _pressed={{ opacity: 0.5 }}
-            >
-              <Octicons
-                name="sign-out"
-                color={colors.red[300]}
-                size={iconSize}
-              />
-            </Pressable>
-          ),
-        }}
-      />
-
-      <Screen
-        name="createAd"
-        component={CreateAd}
-        options={{
-          tabBarButton: () => null,
-        }}
-      />
-
-      <Screen
-        name="ad"
-        component={Ad}
-        options={{
-          tabBarButton: () => null,
-        }}
-      />
-
-      <Screen
-        name="adPreview"
-        component={AdPreview}
-        options={{
-          tabBarButton: () => null,
-        }}
-      />
-    </Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainNav" component={HomeRoutes} />
+      <Stack.Screen name="createAd" component={CreateAd} />
+      <Stack.Screen name="ad" component={Ad} />
+      <Stack.Screen name="adPreview" component={AdPreview} />
+    </Stack.Navigator>
   );
 }
