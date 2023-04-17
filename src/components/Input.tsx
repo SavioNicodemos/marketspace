@@ -37,7 +37,7 @@ export function Input({
         px={4}
         borderWidth={0}
         fontSize="md"
-        color="white"
+        color="gray.200"
         fontFamily="body"
         placeholderTextColor="gray.400"
         isInvalid={isInvalidField}
