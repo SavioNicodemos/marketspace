@@ -1,4 +1,6 @@
 import { Box, HStack, Image, Pressable, Text, VStack } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { UserPhoto } from './UserPhoto';
 
 type Props = {
@@ -19,6 +21,12 @@ export function AdCard({
   adIsDisabled,
 }: Props) {
   const formattedPrice = (price / 100).toFixed(2);
+
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const handleGoToAdDetails = () => {
+    navigation.navigate('ad');
+  };
   return (
     <Pressable
       width="48%"
@@ -26,6 +34,7 @@ export function AdCard({
       mx={1}
       mb={6}
       _pressed={{ opacity: 0.7 }}
+      onPress={handleGoToAdDetails}
     >
       <VStack flex={1}>
         <Image

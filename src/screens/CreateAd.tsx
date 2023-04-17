@@ -9,21 +9,41 @@ import {
   Switch,
   ScrollView,
   Checkbox,
+  IconButton,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
 import { TextArea } from '@components/TextArea';
 import { useState } from 'react';
 import { Button } from '@components/Button';
+import { useNavigation } from '@react-navigation/native';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
 
 export function CreateAd() {
   const [isNew, setIsNew] = useState<string>('new');
   const [groupValue, setGroupValue] = useState();
+
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  const handleGoToPreview = () => {
+    navigation.navigate('adPreview');
+  };
   return (
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
         <HStack justifyContent="space-between" mb="8">
-          <Icon as={Feather} name="arrow-left" color="gray.100" size="lg" />
+          <IconButton
+            icon={
+              <Icon as={Feather} name="arrow-left" color="gray.100" size="lg" />
+            }
+            rounded="full"
+            onPress={handleGoBack}
+          />
+
           <Heading fontSize="lg" color="gray.100" ml={-5}>
             Meus anúncios
           </Heading>
@@ -157,8 +177,20 @@ export function CreateAd() {
         px="6"
         space={4}
       >
-        <Button title="Cancelar" variant="secondary" maxWidth={200} px={4} />
-        <Button title="Avançar" variant="primary" maxWidth={200} px={4} />
+        <Button
+          title="Cancelar"
+          variant="secondary"
+          maxWidth={200}
+          px={4}
+          onPress={handleGoBack}
+        />
+        <Button
+          title="Avançar"
+          variant="primary"
+          maxWidth={200}
+          px={4}
+          onPress={handleGoToPreview}
+        />
       </HStack>
     </>
   );

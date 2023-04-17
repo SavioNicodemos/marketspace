@@ -6,10 +6,13 @@ import {
   Text,
   Select,
   FlatList,
+  IconButton,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { AdCard } from '@components/AdCard';
+import { useNavigation } from '@react-navigation/native';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
 
 const productList = [
   {
@@ -62,6 +65,10 @@ const productList = [
 
 export function MyAds() {
   const [status, setStatus] = useState('');
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+  const handleGoToCreateAd = () => {
+    navigation.navigate('createAd');
+  };
   return (
     <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
       <HStack justifyContent="space-between" mb="8">
@@ -69,7 +76,11 @@ export function MyAds() {
         <Heading fontSize="lg" color="gray.100" mr={-5}>
           Meus anúncios
         </Heading>
-        <Icon as={Feather} name="plus" color="gray.100" size="lg" />
+        <IconButton
+          icon={<Icon as={Feather} name="plus" color="gray.100" size="lg" />}
+          rounded="full"
+          onPress={handleGoToCreateAd}
+        />
       </HStack>
       <HStack alignItems="center" justifyContent="space-between" mb={5}>
         <Text color="gray.200" fontSize="sm">

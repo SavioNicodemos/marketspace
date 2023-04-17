@@ -2,6 +2,8 @@ import { HStack, VStack, Text, Heading, Center } from 'native-base';
 import { Platform } from 'react-native';
 import { Button } from '@components/Button';
 import { AdDetails } from '@components/AdDetails';
+import { useNavigation } from '@react-navigation/native';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
 
 const product = {
   id: 'e81de72d-34b3-4c2a-8096-25d3904cf100',
@@ -40,6 +42,15 @@ const product = {
 };
 
 export function AdPreview() {
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  const handleGoToAd = () => {
+    navigation.navigate('ad');
+  };
   return (
     <VStack bgColor="blue.500" flex={1} pt={12}>
       <Center py="3">
@@ -68,6 +79,7 @@ export function AdPreview() {
           variant="secondary"
           maxWidth={200}
           px={4}
+          onPress={handleGoBack}
         />
         <Button
           icon="tag"
@@ -75,6 +87,7 @@ export function AdPreview() {
           variant="blue"
           maxWidth={200}
           px={4}
+          onPress={handleGoToAd}
         />
       </HStack>
     </VStack>

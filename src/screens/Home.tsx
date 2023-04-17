@@ -8,6 +8,7 @@ import {
   VStack,
   Icon,
   FlatList,
+  Pressable,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
@@ -84,6 +85,10 @@ export function Home() {
     navigation.navigate('createAd');
   };
 
+  const handleGoToMyAds = () => {
+    navigation.navigate('myAds');
+  };
+
   return (
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
@@ -110,34 +115,36 @@ export function Home() {
           <Text color="gray.300" fontSize="sm" mb="3">
             Seus produtos anunciados para venda
           </Text>
-          <HStack
-            bgColor="blue.50"
-            px="4"
-            py="3"
-            alignItems="center"
-            rounded="lg"
-          >
-            <Icon as={Feather} name="tag" color="blue.700" size="lg" />
-            <Box flex={1} ml={3}>
-              <Heading fontSize="lg" color="gray.200">
-                4
-              </Heading>
-              <Text color="gray.200" fontSize="xs">
-                anúncios ativos
-              </Text>
-            </Box>
-            <Box flexDir="row" alignItems="center">
-              <Heading color="blue.700" fontSize="xs">
-                Meus anúncios
-              </Heading>
-              <Icon
-                as={Feather}
-                name="arrow-right"
-                color="blue.700"
-                size="sm"
-              />
-            </Box>
-          </HStack>
+          <Pressable onPress={handleGoToMyAds}>
+            <HStack
+              bgColor="blue.50"
+              px="4"
+              py="3"
+              alignItems="center"
+              rounded="lg"
+            >
+              <Icon as={Feather} name="tag" color="blue.700" size="lg" />
+              <Box flex={1} ml={3}>
+                <Heading fontSize="lg" color="gray.200">
+                  4
+                </Heading>
+                <Text color="gray.200" fontSize="xs">
+                  anúncios ativos
+                </Text>
+              </Box>
+              <Box flexDir="row" alignItems="center">
+                <Heading color="blue.700" fontSize="xs">
+                  Meus anúncios
+                </Heading>
+                <Icon
+                  as={Feather}
+                  name="arrow-right"
+                  color="blue.700"
+                  size="sm"
+                />
+              </Box>
+            </HStack>
+          </Pressable>
         </VStack>
 
         <VStack mt="8">

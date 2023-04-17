@@ -3,6 +3,8 @@ import { Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from '@components/Button';
 import { AdDetails } from '@components/AdDetails';
+import { useNavigation } from '@react-navigation/native';
+import { INavigationRoutes } from '@dtos/RoutesDTO';
 
 const product = {
   id: 'e81de72d-34b3-4c2a-8096-25d3904cf100',
@@ -41,6 +43,17 @@ const product = {
 
 export function Ad() {
   const isMyAd = true;
+
+  const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const handleGoToHome = () => {
+    navigation.navigate('home');
+  };
+
+  const handleGoToEditAd = () => {
+    navigation.navigate('createAd');
+  };
+
   return (
     <VStack bgColor="gray.600" flex={1} pt={12}>
       <HStack px={6} justifyContent="space-between">
@@ -49,6 +62,7 @@ export function Ad() {
           icon={
             <Icon as={Feather} name="arrow-left" color="gray.100" size="lg" />
           }
+          onPress={handleGoToHome}
         />
         {isMyAd ? (
           <IconButton
@@ -56,6 +70,7 @@ export function Ad() {
             icon={
               <Icon as={Feather} name="edit-3" color="gray.100" size="lg" />
             }
+            onPress={handleGoToEditAd}
           />
         ) : null}
       </HStack>
