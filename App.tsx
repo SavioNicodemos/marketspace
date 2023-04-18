@@ -12,18 +12,22 @@ import { Routes } from '@routes/index';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthContextProvider } from '@contexts/AuthContext';
 
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import THEME from './src/theme';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Karla400Regular, Karla700Bold });
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NativeBaseProvider theme={THEME}>
-        <StatusBar style="dark" backgroundColor="transparent" translucent />
-
-        <AuthContextProvider>
-          {fontsLoaded ? <Routes /> : <Loading />}
-        </AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthContextProvider>
+            <StatusBar style="dark" backgroundColor="transparent" translucent />
+            {fontsLoaded ? <Routes /> : <Loading />}
+          </AuthContextProvider>
+        </QueryClientProvider>
       </NativeBaseProvider>
     </GestureHandlerRootView>
   );
