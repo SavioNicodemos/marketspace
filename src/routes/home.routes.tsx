@@ -7,6 +7,7 @@ import { Home } from '@screens/Home';
 import { MyAds } from '@screens/MyAds';
 import { useTheme, Pressable } from 'native-base';
 import { Octicons } from '@expo/vector-icons';
+import { useAuth } from '@hooks/useAuth';
 
 export type BottomTabRoutes = {
   home: undefined;
@@ -23,6 +24,7 @@ function LogoutComponent() {
 }
 
 export function HomeRoutes() {
+  const { signOut } = useAuth();
   const { sizes, colors } = useTheme();
   const iconSize = sizes[6];
   return (
@@ -62,7 +64,7 @@ export function HomeRoutes() {
             <Pressable
               pt="3"
               pr="4"
-              onPress={() => null}
+              onPress={() => signOut()}
               _pressed={{ opacity: 0.5 }}
             >
               <Octicons
