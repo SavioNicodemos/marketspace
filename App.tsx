@@ -10,6 +10,8 @@ import Loading from '@components/Loading';
 
 import { Routes } from '@routes/index';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthContextProvider } from '@contexts/AuthContext';
+
 import THEME from './src/theme';
 
 export default function App() {
@@ -19,7 +21,9 @@ export default function App() {
       <NativeBaseProvider theme={THEME}>
         <StatusBar style="dark" backgroundColor="transparent" translucent />
 
-        {fontsLoaded ? <Routes /> : <Loading />}
+        <AuthContextProvider>
+          {fontsLoaded ? <Routes /> : <Loading />}
+        </AuthContextProvider>
       </NativeBaseProvider>
     </GestureHandlerRootView>
   );
