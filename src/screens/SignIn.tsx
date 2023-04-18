@@ -1,14 +1,54 @@
-import { ScrollView, VStack, Center, Text, Heading } from 'native-base';
+import {
+  ScrollView,
+  VStack,
+  Center,
+  Text,
+  Heading,
+  useToast,
+} from 'native-base';
+import { Controller, useForm } from 'react-hook-form';
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
+import { AppError } from '@utils/AppError';
+import { useAuth } from '@hooks/useAuth';
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export function SignIn() {
+  const toast = useToast();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const { singIn } = useAuth();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>();
 
-  const handleNewAccount = () => {
+  async function handleSignIn({ email, password }: FormData) {
+    try {
+      await singIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível entrar. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    }
+  }
+
+  const handleGoToNewAccount = () => {
     navigation.navigate('signUp');
   };
 
@@ -38,15 +78,45 @@ export function SignIn() {
             <Text color="gray.200" fontSize="sm" mt={16}>
               Acesse sua conta
             </Text>
-            <Input
-              placeholder="E-mail"
-              errorMessage="E-mail inválido"
-              isInvalid
-              mt={4}
+
+            <Controller
+              control={control}
+              name="email"
+              rules={{ required: 'Informe o e-mail' }}
+              render={({ field: { onChange } }) => (
+                <Input
+                  placeholder="E-mail"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  errorMessage={errors.email?.message}
+                  onChangeText={onChange}
+                  mt={4}
+                />
+              )}
             />
-            <Input placeholder="Senha" isInvalid={false} />
+
+            <Controller
+              control={control}
+              name="password"
+              rules={{ required: 'Informe a senha' }}
+              render={({ field: { onChange } }) => (
+                <Input
+                  placeholder="Senha"
+                  secureTextEntry
+                  onChangeText={onChange}
+                  errorMessage={errors.password?.message}
+                />
+              )}
+            />
           </Center>
-          <Button title="Entrar" variant="blue" mb="16" mt="4" mx={12} />
+          <Button
+            title="Entrar"
+            variant="blue"
+            mb="16"
+            mt="4"
+            mx={12}
+            onPress={handleSubmit(handleSignIn)}
+          />
         </VStack>
         <Center px={12} mt={16}>
           <Text color="gray.200" fontSize="sm">
@@ -58,7 +128,8 @@ export function SignIn() {
           variant="secondary"
           mt="4"
           mx={12}
-          onPress={handleNewAccount}
+          onPress={handleGoToNewAccount}
+          isDisabled={isSubmitting}
         />
       </VStack>
     </ScrollView>

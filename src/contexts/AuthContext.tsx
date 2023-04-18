@@ -65,7 +65,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const singIn = useCallback(async (email: string, password: string) => {
     try {
       const { data } = await api.post('/sessions', { email, password });
-      console.log(data);
 
       if (data.user && data.token && data.refreshToken) {
         await storageUserAndTokenSave(data.user, data.token, data.refreshToken);
