@@ -2,21 +2,26 @@ import { HStack, View, Image, Center, Box, Text } from 'native-base';
 import Carousel from 'react-native-reanimated-carousel';
 import { useState } from 'react';
 import { Dimensions } from 'react-native';
+import { ImagesDTO } from '@dtos/ProductDTO';
+import { api } from '@services/api';
+
+import noProduct from '@assets/noProduct.png';
 
 type Props = {
-  images: string[];
+  images: ImagesDTO[];
   adIsDisabled?: boolean;
 };
 
 export function ImageCarousel({ images, adIsDisabled }: Props) {
   const { width } = Dimensions.get('window');
+  const imagesArray = images.length ? images : [noProduct];
   const [viewingImageIndex, setViewingImageIndex] = useState(0);
   return (
     <View zIndex={1}>
       <Carousel
         width={width}
         height={width / 1.34}
-        data={images}
+        data={imagesArray}
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.95,
@@ -24,6 +29,7 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
         }}
         pagingEnabled
         snapEnabled
+        enabled={!!images.length}
         onSnapToItem={index => setViewingImageIndex(index)}
         renderItem={({ item }) => (
           <View
@@ -33,9 +39,13 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
             }}
           >
             <Image
-              source={{
-                uri: item,
-              }}
+              source={
+                images.length
+                  ? {
+                      uri: `${api.defaults.baseURL}/images/${item.path}`,
+                    }
+                  : noProduct
+              }
               resizeMode="cover"
               alt="."
               width="full"
@@ -65,7 +75,7 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
         <HStack space={1} bg="#0000005f" p="2" rounded="full">
           {images.map((item, index) => (
             <View
-              key={item}
+              key={item.id}
               h="2"
               w="2"
               bg={viewingImageIndex === index ? 'gray.700' : 'gray.300'}
