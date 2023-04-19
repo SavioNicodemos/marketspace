@@ -88,7 +88,7 @@ export function MyAds() {
                 name={item.name}
                 isNew={item.is_new}
                 price={item.price}
-                productImage={item.product_images[0]}
+                productImage={item.product_images[0]?.path}
                 adIsDisabled={!item.is_new}
               />
             )}

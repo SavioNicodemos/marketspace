@@ -7,9 +7,14 @@ export type ProductDTO = {
   accept_trade: boolean;
   user_id: string;
   is_active: boolean;
-  product_images: string[];
+  product_images: ImagesDTO[];
   payment_methods: PaymentMethod[];
   user: User;
+};
+
+export type ImagesDTO = {
+  id: string;
+  path: string;
 };
 
 type PaymentMethod = {

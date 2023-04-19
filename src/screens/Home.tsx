@@ -17,69 +17,25 @@ import { useState } from 'react';
 import { FiltersModal } from '@components/FiltersModal';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
+import { ProductDTO } from '@dtos/ProductDTO';
+import { api } from '@services/api';
+import Loading from '@components/Loading';
 
-const productList = [
-  {
-    id: '33d40919-8a12-42b3-bcba-a67f29cf6e7c',
-    name: 'Tênis Vermelho',
-    price: 5990,
-    is_new: false,
-    accept_trade: false,
-    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
-    payment_methods: [
-      {
-        key: 'pix',
-        name: 'Pix',
-      },
-      {
-        key: 'card',
-        name: 'Cartão de Crédito',
-      },
-    ],
-    user: {
-      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
-    },
-  },
-  {
-    id: 'f17e4861-59dd-4fd5-870c-2a4c104e06b9',
-    name: 'Luminária Pendente',
-    price: 4500,
-    is_new: true,
-    accept_trade: true,
-    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
-    payment_methods: [
-      {
-        key: 'pix',
-        name: 'Pix',
-      },
-    ],
-    user: {
-      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
-    },
-  },
-  {
-    id: 'f17e4861-59dd-4fd5-870c-2a4c104e06b8',
-    name: 'Luminária Pendente',
-    price: 4500,
-    is_new: true,
-    accept_trade: true,
-    product_images: ['https://avatars.githubusercontent.com/u/111062089?v=4'],
-    payment_methods: [
-      {
-        key: 'pix',
-        name: 'Pix',
-      },
-    ],
-    user: {
-      avatar: '193161b2f0d886f9368c-profile_picture.jpg',
-    },
-  },
-];
+const getAds = async (): Promise<ProductDTO[]> => {
+  const response = await api.get('/products');
+  return response.data;
+};
 
 export function Home() {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
   const navigation = useNavigation<INavigationRoutes['navigation']>();
+
+  const { data: productList, isLoading } = useQuery({
+    queryKey: ['ads'],
+    queryFn: () => getAds(),
+  });
 
   const handleGoToCreateAdd = () => {
     navigation.navigate('createAd');
@@ -158,24 +114,28 @@ export function Home() {
             onFilterPress={() => setIsFiltersModalOpen(true)}
           />
 
-          <FlatList
-            data={productList}
-            keyExtractor={item => item.id}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'space-between',
-            }}
-            renderItem={({ item }) => (
-              <AdCard
-                name={item.name}
-                isNew={item.is_new}
-                price={item.price}
-                userPhoto={item.user.avatar}
-                productImage={item.product_images[0]}
-              />
-            )}
-            numColumns={2}
-          />
+          {isLoading ? (
+            <Loading backgroundStyle="appDefault" />
+          ) : (
+            <FlatList
+              data={productList}
+              keyExtractor={item => item.id}
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'space-between',
+              }}
+              renderItem={({ item }) => (
+                <AdCard
+                  name={item.name}
+                  isNew={item.is_new}
+                  price={item.price}
+                  userPhoto={item.user.avatar}
+                  productImage={item.product_images[0]?.path}
+                />
+              )}
+              numColumns={2}
+            />
+          )}
         </VStack>
       </VStack>
       <FiltersModal

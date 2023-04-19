@@ -1,6 +1,9 @@
 import { Box, HStack, Image, Pressable, Text, VStack } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
+import { api } from '@services/api';
+import defaultProductImage from '@assets/noProduct.png';
+import defaultUserImage from '@assets/defaultAvatar.png';
 import { UserPhoto } from './UserPhoto';
 
 type Props = {
@@ -38,9 +41,13 @@ export function AdCard({
     >
       <VStack flex={1}>
         <Image
-          source={{
-            uri: productImage,
-          }}
+          source={
+            productImage
+              ? {
+                  uri: `${api.defaults.baseURL}/images/${productImage}`,
+                }
+              : defaultProductImage
+          }
           rounded="md"
           alt="Foto do produto vendido"
           resizeMode="cover"
@@ -58,9 +65,13 @@ export function AdCard({
               size={7}
               borderWidth={2}
               borderColor="white"
-              source={{
-                uri: `${userPhoto}`,
-              }}
+              source={
+                userPhoto
+                  ? {
+                      uri: `${api.defaults.baseURL}/images/${userPhoto}`,
+                    }
+                  : defaultUserImage
+              }
             />
           ) : null}
           <Text
