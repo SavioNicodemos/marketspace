@@ -21,6 +21,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ProductDTO } from '@dtos/ProductDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
+import { useAuth } from '@hooks/useAuth';
 
 const getAds = async (): Promise<ProductDTO[]> => {
   const response = await api.get('/products');
@@ -31,6 +32,7 @@ export function Home() {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
   const navigation = useNavigation<INavigationRoutes['navigation']>();
+  const { user } = useAuth();
 
   const { data: productList, isLoading } = useQuery({
     queryKey: ['ads'],
@@ -49,14 +51,10 @@ export function Home() {
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
         <HStack justifyContent="center">
-          <UserPhoto
-            size={12}
-            mr={2}
-            source={{ uri: 'https://github.com/savionicodemos.png' }}
-          />
+          <UserPhoto size={12} mr={2} imageLink={user.avatar} />
           <VStack>
             <Text fontSize="md">Boas vindas,</Text>
-            <Heading fontSize="md">Nicodemos</Heading>
+            <Heading fontSize="md">{user.name}</Heading>
           </VStack>
           <Box flex={1} pl={12}>
             <Button

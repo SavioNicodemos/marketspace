@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { api } from '@services/api';
 import defaultProductImage from '@assets/noProduct.png';
-import defaultUserImage from '@assets/defaultAvatar.png';
 import { UserPhoto } from './UserPhoto';
 
 type Props = {
@@ -65,13 +64,7 @@ export function AdCard({
               size={7}
               borderWidth={2}
               borderColor="white"
-              source={
-                userPhoto
-                  ? {
-                      uri: `${api.defaults.baseURL}/images/${userPhoto}`,
-                    }
-                  : defaultUserImage
-              }
+              imageLink={userPhoto}
             />
           ) : null}
           <Text
