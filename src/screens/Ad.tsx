@@ -32,7 +32,7 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
     isError,
   } = useQuery({
     queryKey: ['product', productId],
-    queryFn: () => getProduct(productId + 1),
+    queryFn: () => getProduct(productId),
     onError: (error: any) => {
       toast.show({
         description: `Algo deu errado: ${error?.message}`,
