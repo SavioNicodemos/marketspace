@@ -14,7 +14,7 @@ import {
 } from 'native-base';
 
 import { AdCard } from '@components/AdCard';
-import { ProductDTO } from '@dtos/ProductDTO';
+import { IProductId, ProductDTO } from '@dtos/ProductDTO';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
@@ -33,6 +33,10 @@ export function MyAds() {
     queryKey: ['myAds'],
     queryFn: () => getMyAds(),
   });
+
+  const handleGoToAdDetails = (productId: IProductId) => {
+    navigation.navigate('ad', { productId, isMyAd: true });
+  };
 
   const handleGoToCreateAd = () => {
     navigation.navigate('createAd');
@@ -90,6 +94,7 @@ export function MyAds() {
                 price={item.price}
                 productImage={item.product_images[0]?.path}
                 adIsDisabled={!item.is_new}
+                onPress={() => handleGoToAdDetails(item.id)}
               />
             )}
             numColumns={2}

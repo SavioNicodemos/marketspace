@@ -18,7 +18,7 @@ import { FiltersModal } from '@components/FiltersModal';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
-import { ProductDTO } from '@dtos/ProductDTO';
+import { IProductId, ProductDTO } from '@dtos/ProductDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
 import { useAuth } from '@hooks/useAuth';
@@ -45,6 +45,10 @@ export function Home() {
 
   const handleGoToMyAds = () => {
     navigation.navigate('myAds');
+  };
+
+  const handleGoToAdDetails = (productId: IProductId) => {
+    navigation.navigate('ad', { productId, isMyAd: false });
   };
 
   return (
@@ -129,6 +133,7 @@ export function Home() {
                   price={item.price}
                   userPhoto={item.user.avatar}
                   productImage={item.product_images[0]?.path}
+                  onPress={() => handleGoToAdDetails(item.id)}
                 />
               )}
               numColumns={2}

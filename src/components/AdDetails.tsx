@@ -27,7 +27,7 @@ export function AdDetails({ product }: Props) {
           <UserPhoto
             size={6}
             borderWidth={2}
-            source={{ uri: 'https://source.unsplash.com/1024x768/?nature' }}
+            imageLink={product.user.avatar}
             mr={2}
           />
 
