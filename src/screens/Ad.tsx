@@ -1,58 +1,59 @@
-import { HStack, VStack, Icon, IconButton, Heading, Box } from 'native-base';
+import {
+  HStack,
+  VStack,
+  Icon,
+  IconButton,
+  Heading,
+  Box,
+  useToast,
+} from 'native-base';
 import { Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from '@components/Button';
 import { AdDetails } from '@components/AdDetails';
-import { useNavigation } from '@react-navigation/native';
-import { INavigationRoutes } from '@dtos/RoutesDTO';
+import { IAdDetailsRoutes } from '@dtos/RoutesDTO';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@services/api';
+import { IProductId, ProductDTO } from '@dtos/ProductDTO';
+import Loading from '@components/Loading';
 
-const product = {
-  id: 'e81de72d-34b3-4c2a-8096-25d3904cf100',
-  name: 'Luminária Pendente',
-  description: 'Essa é a melhor luminária do mundo. Você não vai se arrepender',
-  is_new: true,
-  price: 4500,
-  accept_trade: true,
-  user_id: 'cab6e6f2-a201-4682-8da4-1d517261da1d',
-  is_active: false,
-  created_at: '2023-04-10T23:10:27.531Z',
-  updated_at: '2023-04-10T23:10:27.531Z',
-  product_images: [
-    'https://source.unsplash.com/1024x768/?nature',
-    'https://source.unsplash.com/1024x768/?water',
-    'https://source.unsplash.com/1024x768/?girl',
-    'https://source.unsplash.com/1024x768/?man',
-    'https://source.unsplash.com/1024x768/?tree',
-  ],
-  payment_methods: [
-    {
-      key: 'pix',
-      name: 'Pix',
-    },
-    {
-      key: 'card',
-      name: 'Cartão de crédito',
-    },
-  ],
-  user: {
-    avatar: 'ea793fa105371dccb856-Profile_picture.png',
-    name: 'Nicodemos Santos',
-    tel: '351926154569',
-  },
+const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
+  const response = await api.get(`/products/${productId}`);
+  return response.data;
 };
 
-export function Ad() {
-  const isMyAd = true;
+export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
+  const toast = useToast();
+  const { productId, isMyAd } = route.params;
 
-  const navigation = useNavigation<INavigationRoutes['navigation']>();
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['product', productId],
+    queryFn: () => getProduct(productId + 1),
+    onError: (error: any) => {
+      toast.show({
+        description: `Algo deu errado: ${error?.message}`,
+        placement: 'top',
+        color: 'red.200',
+      });
+      navigation.goBack();
+    },
+  });
 
-  const handleGoToHome = () => {
-    navigation.navigate('home');
+  const handlePressArrowBackButton = () => {
+    navigation.goBack();
   };
 
   const handleGoToEditAd = () => {
     navigation.navigate('createAd');
   };
+
+  if (isError) {
+    return <Heading>Sorry, something went wrong! try again later</Heading>;
+  }
 
   return (
     <VStack bgColor="gray.600" flex={1} pt={12}>
@@ -62,7 +63,7 @@ export function Ad() {
           icon={
             <Icon as={Feather} name="arrow-left" color="gray.100" size="lg" />
           }
-          onPress={handleGoToHome}
+          onPress={handlePressArrowBackButton}
         />
         {isMyAd ? (
           <IconButton
@@ -75,64 +76,75 @@ export function Ad() {
         ) : null}
       </HStack>
 
-      <AdDetails product={product} />
-
-      {isMyAd ? (
-        <HStack
-          justifyContent="space-between"
-          bg="white"
-          pt={4}
-          pb={8}
-          alignItems="center"
-          px="6"
-          flexDir="column"
-          space={4}
-        >
-          <VStack>
-            <Button
-              title="Desativar anúncio"
-              icon="power"
-              variant="primary"
-              minW={360}
-            />
-          </VStack>
-          <VStack mt={3}>
-            <Button
-              title="Excluir anúncio"
-              icon="trash"
-              variant="secondary"
-              minW={360}
-            />
-          </VStack>
-        </HStack>
+      {isLoading ? (
+        <Loading backgroundStyle="appDefault" />
       ) : (
-        <HStack
-          justifyContent="space-between"
-          bg="white"
-          pt={Platform.OS === 'ios' ? 4 : 8}
-          pb={8}
-          alignItems="center"
-          px="6"
-        >
-          <Box flexDir="row" alignItems="baseline">
-            <Heading color="blue.700" fontSize="sm" mr="1" fontFamily="heading">
-              R$
-            </Heading>
-            <Heading color="blue.700" fontSize="2xl" fontFamily="heading">
-              {(product.price / 100).toLocaleString('pt-BR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </Heading>
-          </Box>
-          <Button
-            icon="message-circle"
-            title="Entrar em contato"
-            variant="blue"
-            maxWidth={200}
-            px={4}
-          />
-        </HStack>
+        <>
+          <AdDetails product={product} />
+
+          {isMyAd ? (
+            <HStack
+              justifyContent="space-between"
+              bg="white"
+              pt={4}
+              pb={8}
+              alignItems="center"
+              px="6"
+              flexDir="column"
+              space={4}
+            >
+              <VStack>
+                <Button
+                  title="Desativar anúncio"
+                  icon="power"
+                  variant="primary"
+                  minW={360}
+                />
+              </VStack>
+              <VStack mt={3}>
+                <Button
+                  title="Excluir anúncio"
+                  icon="trash"
+                  variant="secondary"
+                  minW={360}
+                />
+              </VStack>
+            </HStack>
+          ) : (
+            <HStack
+              justifyContent="space-between"
+              bg="white"
+              pt={Platform.OS === 'ios' ? 4 : 8}
+              pb={8}
+              alignItems="center"
+              px="6"
+            >
+              <Box flexDir="row" alignItems="baseline">
+                <Heading
+                  color="blue.700"
+                  fontSize="sm"
+                  mr="1"
+                  fontFamily="heading"
+                >
+                  R$
+                </Heading>
+                <Heading color="blue.700" fontSize="2xl" fontFamily="heading">
+                  {(product.price / 100).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Heading>
+              </Box>
+              <Button
+                icon="message-circle"
+                title="Entrar em contato"
+                variant="blue"
+                maxWidth={200}
+                px={4}
+              />
+            </HStack>
+          )}
+        </>
       )}
     </VStack>
   );

@@ -8,3 +8,8 @@ export type INavigationRoutes = CompositeScreenProps<
   NativeStackScreenProps<MainNavRoutes>,
   BottomTabScreenProps<BottomTabRoutes>
 >;
+
+export type IAdDetailsRoutes = CompositeScreenProps<
+  NativeStackScreenProps<MainNavRoutes, 'ad'>,
+  BottomTabScreenProps<BottomTabRoutes>
+>;

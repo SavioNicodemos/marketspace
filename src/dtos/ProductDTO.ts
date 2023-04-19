@@ -12,6 +12,8 @@ export type ProductDTO = {
   user: User;
 };
 
+export type IProductId = string;
+
 export type ImagesDTO = {
   id: string;
   path: string;
