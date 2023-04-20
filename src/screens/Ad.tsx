@@ -12,7 +12,7 @@ import { Feather } from '@expo/vector-icons';
 import { Button } from '@components/Button';
 import { AdDetails } from '@components/AdDetails';
 import { IAdDetailsRoutes } from '@dtos/RoutesDTO';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@services/api';
 import { IProductId, ProductDTO } from '@dtos/ProductDTO';
 import Loading from '@components/Loading';
@@ -20,6 +20,17 @@ import Loading from '@components/Loading';
 const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
   const response = await api.get(`/products/${productId}`);
   return response.data;
+};
+
+const changeAdVisibility = async (
+  productId: IProductId,
+  productActualStatus: boolean,
+) => {
+  const response = await api.patch(`/products/${productId}`, {
+    is_active: !productActualStatus,
+  });
+
+  return response.data.is_active;
 };
 
 export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
@@ -30,6 +41,7 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
     data: product,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => getProduct(productId),
@@ -42,6 +54,22 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
       navigation.goBack();
     },
   });
+
+  const { isLoading: isLoadingChangeVisibility, mutateAsync } = useMutation({
+    mutationFn: () => changeAdVisibility(productId, !!product?.is_active),
+  });
+
+  const handleChangeAdVisibility = async () => {
+    await mutateAsync();
+    toast.show({
+      description: `Anúncio ${
+        !product?.is_active ? 'ativado' : 'desativado'
+      } com sucesso`,
+      placement: 'top',
+      color: 'green.200',
+    });
+    refetch();
+  };
 
   const handlePressArrowBackButton = () => {
     navigation.goBack();
@@ -95,10 +123,14 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
             >
               <VStack>
                 <Button
-                  title="Desativar anúncio"
+                  title={
+                    product.is_active ? 'Desativar anúncio' : 'Ativar anúncio'
+                  }
                   icon="power"
                   variant="primary"
                   minW={360}
+                  isDisabled={isLoadingChangeVisibility}
+                  onPress={handleChangeAdVisibility}
                 />
               </VStack>
               <VStack mt={3}>

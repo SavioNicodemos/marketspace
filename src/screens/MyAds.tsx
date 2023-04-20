@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import {
   HStack,
@@ -29,7 +29,11 @@ export function MyAds() {
 
   const navigation = useNavigation<INavigationRoutes['navigation']>();
 
-  const { data: myAds, isLoading } = useQuery({
+  const {
+    data: myAds,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['myAds'],
     queryFn: () => getMyAds(),
   });
@@ -41,6 +45,13 @@ export function MyAds() {
   const handleGoToCreateAd = () => {
     navigation.navigate('createAd');
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
+
   return (
     <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
       <HStack justifyContent="space-between" mb="8">
