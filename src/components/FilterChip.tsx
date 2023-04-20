@@ -5,10 +5,15 @@ import { useState } from 'react';
 type Props = {
   title: string;
   onChange?: (value: boolean) => void;
+  value?: boolean;
 };
 
-export function FilterChip({ title, onChange = () => {} }: Props) {
-  const [isActive, setIsActive] = useState(false);
+export function FilterChip({
+  title,
+  onChange = () => {},
+  value = false,
+}: Props) {
+  const [isActive, setIsActive] = useState(value);
 
   const handlePressChip = () => {
     setIsActive(prev => {

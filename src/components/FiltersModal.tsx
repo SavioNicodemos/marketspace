@@ -36,6 +36,12 @@ export function FiltersModal({
   defaultValue,
 }: Props) {
   const [filters, setFilters] = useState<IFiltersDTO>(defaultValue);
+  const [isNewSelected, setIsNewSelected] = useState(
+    defaultValue.isNew === true,
+  );
+  const [isUsedSelected, setIsUsedSelected] = useState(
+    defaultValue.isNew === false,
+  );
 
   const handleResetFilters = () => {
     setFilters(emptyFilters);
@@ -56,6 +62,11 @@ export function FiltersModal({
       ...prev,
       isNew: chooseIfNewOrUsedIsBooleanOrNull(isEnabled, type, filters.isNew),
     }));
+    if (type === 'new') {
+      setIsNewSelected(prev => !prev);
+      return;
+    }
+    setIsUsedSelected(prev => !prev);
   };
 
   return (
@@ -92,10 +103,12 @@ export function FiltersModal({
             <FilterChip
               title="Novo"
               onChange={isEnabled => handleChangeIsNewFilter(isEnabled, 'new')}
+              value={isNewSelected}
             />
             <FilterChip
               title="Usado"
               onChange={isEnabled => handleChangeIsNewFilter(isEnabled, 'used')}
+              value={isUsedSelected}
             />
           </HStack>
         </VStack>
@@ -107,6 +120,7 @@ export function FiltersModal({
             offTrackColor="gray.500"
             thumbColor="white"
             onTrackColor="blue.500"
+            value={!!filters.acceptTrade}
             onValueChange={value =>
               setFilters(prev => ({ ...prev, acceptTrade: value }))
             }
