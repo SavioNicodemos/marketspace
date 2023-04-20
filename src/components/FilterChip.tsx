@@ -4,12 +4,20 @@ import { useState } from 'react';
 
 type Props = {
   title: string;
+  onChange?: (value: boolean) => void;
 };
 
-export function FilterChip({ title }: Props) {
+export function FilterChip({ title, onChange = () => {} }: Props) {
   const [isActive, setIsActive] = useState(false);
+
+  const handlePressChip = () => {
+    setIsActive(prev => {
+      onChange(!prev);
+      return !prev;
+    });
+  };
   return (
-    <Pressable onPress={() => setIsActive(!isActive)}>
+    <Pressable onPress={handlePressChip}>
       <HStack
         pl="4"
         pr={isActive ? 0 : 4}

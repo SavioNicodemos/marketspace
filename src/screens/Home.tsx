@@ -14,7 +14,7 @@ import { Feather } from '@expo/vector-icons';
 import { Input } from '@components/Input';
 import { AdCard } from '@components/AdCard';
 import { useState } from 'react';
-import { FiltersModal } from '@components/FiltersModal';
+import { FiltersModal, emptyFilters } from '@components/FiltersModal';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
@@ -22,21 +22,38 @@ import { IProductId, ProductDTO } from '@dtos/ProductDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
 import { useAuth } from '@hooks/useAuth';
+import { IFiltersDTO } from '@dtos/FiltersDTO';
 
-const getAds = async (): Promise<ProductDTO[]> => {
-  const response = await api.get('/products');
+const getAds = async (filters: IFiltersDTO): Promise<ProductDTO[]> => {
+  const params = new URLSearchParams();
+  if (typeof filters?.acceptTrade === 'boolean') {
+    params.append('accept_trade', filters.acceptTrade.toString());
+  }
+
+  if (typeof filters?.isNew === 'boolean') {
+    params.append('is_new', filters.isNew.toString());
+  }
+
+  filters?.paymentMethods.forEach(element => {
+    params.append('payment_methods', element);
+  });
+
+  const paramsString = params.toString();
+
+  const response = await api.get(`/products?${paramsString}`);
   return response.data;
 };
 
 export function Home() {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
+  const [filters, setFilters] = useState<IFiltersDTO>(emptyFilters);
 
   const navigation = useNavigation<INavigationRoutes['navigation']>();
   const { user } = useAuth();
 
   const { data: productList, isLoading } = useQuery({
-    queryKey: ['ads'],
-    queryFn: () => getAds(),
+    queryKey: ['ads', filters],
+    queryFn: () => getAds(filters),
   });
 
   const handleGoToCreateAdd = () => {
@@ -144,6 +161,8 @@ export function Home() {
       <FiltersModal
         visible={isFiltersModalOpen}
         onClose={() => setIsFiltersModalOpen(false)}
+        onChangeFilters={modalFilters => setFilters(modalFilters)}
+        defaultValue={filters}
       />
     </>
   );

@@ -12,16 +12,52 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 
-import { FilterChip } from './FilterChip';
-import { Button } from './Button';
+import { Button } from '@components/Button';
+import { FilterChip } from '@components/FilterChip';
+import { IFiltersDTO } from '@dtos/FiltersDTO';
+import { chooseIfNewOrUsedIsBooleanOrNull } from '@utils/helpers/conditions';
 
 type Props = {
   visible: boolean;
   onClose?: () => void;
+  onChangeFilters?: (filters: IFiltersDTO) => void;
+  defaultValue: IFiltersDTO;
 };
 
-export function FiltersModal({ visible, onClose = () => {} }: Props) {
-  const [groupValue, setGroupValue] = useState(['Photography', 'Gardening']);
+export const emptyFilters: IFiltersDTO = {
+  isNew: null,
+  acceptTrade: null,
+  paymentMethods: [],
+};
+export function FiltersModal({
+  visible,
+  onClose = () => {},
+  onChangeFilters = () => {},
+  defaultValue,
+}: Props) {
+  const [filters, setFilters] = useState<IFiltersDTO>(defaultValue);
+
+  const handleResetFilters = () => {
+    setFilters(emptyFilters);
+    onChangeFilters(emptyFilters);
+    onClose();
+  };
+
+  const handleApplyFilters = () => {
+    onChangeFilters(filters);
+    onClose();
+  };
+
+  const handleChangeIsNewFilter = (
+    isEnabled: boolean,
+    type: 'new' | 'used',
+  ) => {
+    setFilters(prev => ({
+      ...prev,
+      isNew: chooseIfNewOrUsedIsBooleanOrNull(isEnabled, type, filters.isNew),
+    }));
+  };
+
   return (
     <Modal
       isOpen={visible}
@@ -53,8 +89,14 @@ export function FiltersModal({ visible, onClose = () => {} }: Props) {
             Condição
           </Text>
           <HStack space={2}>
-            <FilterChip title="Novo" />
-            <FilterChip title="Usado" />
+            <FilterChip
+              title="Novo"
+              onChange={isEnabled => handleChangeIsNewFilter(isEnabled, 'new')}
+            />
+            <FilterChip
+              title="Usado"
+              onChange={isEnabled => handleChangeIsNewFilter(isEnabled, 'used')}
+            />
           </HStack>
         </VStack>
         <VStack alignItems="flex-start">
@@ -65,6 +107,9 @@ export function FiltersModal({ visible, onClose = () => {} }: Props) {
             offTrackColor="gray.500"
             thumbColor="white"
             onTrackColor="blue.500"
+            onValueChange={value =>
+              setFilters(prev => ({ ...prev, acceptTrade: value }))
+            }
           />
         </VStack>
         <VStack space={2}>
@@ -73,42 +118,42 @@ export function FiltersModal({ visible, onClose = () => {} }: Props) {
           </HStack>
           <Checkbox.Group
             colorScheme="blue"
-            defaultValue={groupValue}
+            defaultValue={filters.paymentMethods}
             accessibilityLabel="pick an item"
             onChange={values => {
-              setGroupValue(values || []);
+              setFilters(prev => ({ ...prev, paymentMethods: values }));
             }}
           >
             <Checkbox
               _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-              value="Boleto"
+              value="boleto"
               my="1"
             >
               Boleto
             </Checkbox>
             <Checkbox
-              value="Pix"
+              value="pix"
               my="1"
               _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
             >
               Pix
             </Checkbox>
             <Checkbox
-              value="Dinheiro"
+              value="cash"
               my="1"
               _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
             >
               Dinheiro
             </Checkbox>
             <Checkbox
-              value="Cartão de crédito"
+              value="card"
               my="1"
               _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
             >
               Cartão de crédito
             </Checkbox>
             <Checkbox
-              value="Depósito Bancário"
+              value="deposit"
               my="1"
               _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
             >
@@ -117,8 +162,17 @@ export function FiltersModal({ visible, onClose = () => {} }: Props) {
           </Checkbox.Group>
         </VStack>
         <HStack space={2} mt="4">
-          <Button title="Resetar filtros" variant="secondary" flex={1} />
-          <Button title="Aplicar filtros" flex={1} />
+          <Button
+            title="Resetar filtros"
+            variant="secondary"
+            flex={1}
+            onPress={handleResetFilters}
+          />
+          <Button
+            title="Aplicar filtros"
+            flex={1}
+            onPress={handleApplyFilters}
+          />
         </HStack>
       </VStack>
     </Modal>
