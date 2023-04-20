@@ -104,7 +104,7 @@ export function MyAds() {
                 isNew={item.is_new}
                 price={item.price}
                 productImage={item.product_images[0]?.path}
-                adIsDisabled={!item.is_new}
+                adIsDisabled={!item.is_active}
                 onPress={() => handleGoToAdDetails(item.id)}
               />
             )}
