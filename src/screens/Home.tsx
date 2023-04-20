@@ -48,6 +48,11 @@ const getAds = async (filters: IFiltersDTO): Promise<ProductDTO[]> => {
   return response.data;
 };
 
+const getMyAds = async (): Promise<ProductDTO[]> => {
+  const response = await api.get('/users/products');
+  return response.data;
+};
+
 export function Home() {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [filters, setFilters] = useState<IFiltersDTO>(emptyFilters);
@@ -59,6 +64,15 @@ export function Home() {
     queryKey: ['ads', filters],
     queryFn: () => getAds(filters),
   });
+
+  const { data: myAds } = useQuery({
+    queryKey: ['myAds'],
+    queryFn: () => getMyAds(),
+  });
+
+  const myActiveProductsCount = myAds
+    ? myAds.filter(product => product.is_active).length
+    : 0;
 
   const handleGoToCreateAdd = () => {
     navigation.navigate('createAd');
@@ -105,7 +119,7 @@ export function Home() {
               <Icon as={Feather} name="tag" color="blue.700" size="lg" />
               <Box flex={1} ml={3}>
                 <Heading fontSize="lg" color="gray.200">
-                  4
+                  {myActiveProductsCount}
                 </Heading>
                 <Text color="gray.200" fontSize="xs">
                   anúncios ativos
