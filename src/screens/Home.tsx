@@ -26,6 +26,10 @@ import { IFiltersDTO } from '@dtos/FiltersDTO';
 
 const getAds = async (filters: IFiltersDTO): Promise<ProductDTO[]> => {
   const params = new URLSearchParams();
+  if (filters?.productName) {
+    params.append('query', filters.productName);
+  }
+
   if (typeof filters?.acceptTrade === 'boolean') {
     params.append('accept_trade', filters.acceptTrade.toString());
   }
@@ -131,6 +135,9 @@ export function Home() {
             placeholder="Buscar anúncio"
             searchBar
             onFilterPress={() => setIsFiltersModalOpen(true)}
+            onChangeText={value =>
+              setFilters(prev => ({ ...prev, productName: value }))
+            }
           />
 
           {isLoading ? (
@@ -161,7 +168,9 @@ export function Home() {
       <FiltersModal
         visible={isFiltersModalOpen}
         onClose={() => setIsFiltersModalOpen(false)}
-        onChangeFilters={modalFilters => setFilters(modalFilters)}
+        onChangeFilters={modalFilters =>
+          setFilters(prev => ({ ...prev, modalFilters }))
+        }
         defaultValue={filters}
       />
     </>
