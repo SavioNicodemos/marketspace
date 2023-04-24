@@ -1,15 +1,31 @@
-export type ProductDTO = {
-  id: string;
+export type PaymentMethodsTypes =
+  | 'pix'
+  | 'card'
+  | 'boleto'
+  | 'cash'
+  | 'deposit';
+
+export type CreateProductDTO = {
   name: string;
   description: string;
   is_new: boolean;
-  price: number;
+  price: string;
   accept_trade: boolean;
+  payment_methods: PaymentMethodsTypes[];
+};
+
+export type ShowAdDetailsDTO = Omit<CreateProductDTO, 'price'> & {
+  price: number;
+  user: User;
+  payment_methods: IPaymentMethodObject[] | PaymentMethodsTypes[];
+  product_images: ImagesDTO[];
+};
+
+export type ProductDTO = ShowAdDetailsDTO & {
+  id: string;
   user_id: string;
   is_active: boolean;
-  product_images: ImagesDTO[];
-  payment_methods: PaymentMethod[];
-  user: User;
+  payment_methods: IPaymentMethodObject[];
 };
 
 export type IProductId = string;
@@ -19,8 +35,8 @@ export type ImagesDTO = {
   path: string;
 };
 
-type PaymentMethod = {
-  key: string;
+export type IPaymentMethodObject = {
+  key: PaymentMethodsTypes;
   name: string;
 };
 

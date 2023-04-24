@@ -5,16 +5,19 @@ import QrCode from '@assets/icons/qr-code-regular.svg';
 import Money from '@assets/icons/money-regular.svg';
 import CreditCard from '@assets/icons/credit-card-regular.svg';
 import Bank from '@assets/icons/bank-regular.svg';
+import { IPaymentMethodObject, PaymentMethodsTypes } from '@dtos/ProductDTO';
 
-type PaymentMethodProps = {
-  key: string;
-  name: string;
-};
-
-type Props = { paymentsArray: PaymentMethodProps[] };
+type Props = { paymentsArray: IPaymentMethodObject[] | PaymentMethodsTypes[] };
 
 export function PaymentMethods({ paymentsArray }: Props) {
-  const paymentMethods = paymentsArray.map(method => method.key);
+  let paymentMethods: PaymentMethodsTypes[] = [];
+  if (paymentsArray.length > 0 && typeof paymentsArray[0] !== 'string') {
+    paymentMethods = (paymentsArray as IPaymentMethodObject[]).map(
+      method => method.key,
+    );
+  } else {
+    paymentMethods = paymentsArray as PaymentMethodsTypes[];
+  }
   return (
     <>
       {paymentMethods.includes('boleto') && (

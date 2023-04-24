@@ -2,10 +2,10 @@ import { HStack, VStack, Text, Heading, Box, ScrollView } from 'native-base';
 import { ImageCarousel } from '@components/ImageCarousel';
 import { UserPhoto } from '@components/UserPhoto';
 import { PaymentMethods } from '@components/PaymentMethods';
-import { ProductDTO } from '@dtos/ProductDTO';
+import { ShowAdDetailsDTO } from '@dtos/ProductDTO';
 
 type Props = {
-  product: ProductDTO;
+  product: ShowAdDetailsDTO;
 };
 
 export function AdDetails({ product }: Props) {
