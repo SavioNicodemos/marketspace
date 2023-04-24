@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { HStack, VStack, Text, Heading, Center } from 'native-base';
 import { Platform } from 'react-native';
 import { Button } from '@components/Button';
@@ -5,6 +6,7 @@ import { AdDetails } from '@components/AdDetails';
 import { IAdPreviewRoutes } from '@dtos/RoutesDTO';
 import { ShowAdDetailsDTO } from '@dtos/ProductDTO';
 import { useAuth } from '@hooks/useAuth';
+import { api } from '@services/api';
 
 export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
   const { product } = route.params;
@@ -25,8 +27,23 @@ export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
     navigation.goBack();
   };
 
-  const handleGoToAd = () => {
-    navigation.navigate('ad', { productId: '1', isMyAd: true });
+  const handleGoToAd = (productId: string) => {
+    navigation.navigate('ad', { productId, isMyAd: true });
+  };
+
+  const handleCreateAd = async () => {
+    const { name, description, is_new, accept_trade, payment_methods } =
+      product;
+    const response = await api.post('/products', {
+      name,
+      description,
+      is_new,
+      price: productPreview.price,
+      accept_trade,
+      payment_methods,
+    });
+
+    handleGoToAd(response.data.id);
   };
 
   return (
@@ -65,7 +82,7 @@ export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
           variant="blue"
           maxWidth={200}
           px={4}
-          onPress={handleGoToAd}
+          onPress={handleCreateAd}
         />
       </HStack>
     </VStack>
