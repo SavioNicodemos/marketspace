@@ -1,3 +1,6 @@
+import { Feather } from '@expo/vector-icons';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigation } from '@react-navigation/native';
 import {
   HStack,
   VStack,
@@ -5,33 +8,63 @@ import {
   Icon,
   Text,
   Box,
-  Radio,
   Switch,
   ScrollView,
-  Checkbox,
   IconButton,
 } from 'native-base';
-import { Feather } from '@expo/vector-icons';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
 import { Input } from '@components/Input';
 import { TextArea } from '@components/TextArea';
-import { useState } from 'react';
 import { Button } from '@components/Button';
-import { useNavigation } from '@react-navigation/native';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
+import { CreateProductDTO } from '@dtos/ProductDTO';
+import { IsNewRadioContainer } from '@components/IsNewRadioContainer';
+import { PaymentMethodsCheckbox } from '@components/PaymentMethodsCheckbox';
+
+const createAdSchema = yup.object({
+  name: yup.string().required('Informe o nome do produto'),
+
+  description: yup.string().required('Informe uma descrição para o produto'),
+
+  price: yup
+    .number()
+    .typeError('Please enter only numeric values')
+    .nullable()
+    .required()
+    .min(0)
+    .max(100000),
+
+  payment_methods: yup
+    .array()
+    .min(1, 'Informe pelo menos um método de pagamento')
+    .required('Informe pelo menos um método de pagamento'),
+});
 
 export function CreateAd() {
-  const [isNew, setIsNew] = useState<string>('new');
-  const [groupValue, setGroupValue] = useState();
-
   const navigation = useNavigation<INavigationRoutes['navigation']>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateProductDTO>({
+    defaultValues: { is_new: true, accept_trade: true },
+    resolver: yupResolver(createAdSchema),
+  });
 
   const handleGoBack = () => {
     navigation.goBack();
   };
 
-  const handleGoToPreview = () => {
-    navigation.navigate('adPreview');
+  const handleGoToPreview = (data: CreateProductDTO) => {
+    navigation.navigate('adPreview', { product: data });
   };
+
+  const handlePreviewAd = (data: CreateProductDTO) => {
+    handleGoToPreview(data);
+  };
+
   return (
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
@@ -75,96 +108,96 @@ export function CreateAd() {
             <Text mb="4" fontFamily="heading" fontSize="md" color="gray.200">
               Sobre o produto
             </Text>
-            <Input placeholder="Título do anúncio" />
-            <TextArea placeholder="Descrição do produto" />
-            <Radio.Group
-              name="myRadioGroup"
-              accessibilityLabel="favorite number"
-              value={isNew}
-              onChange={nextValue => {
-                setIsNew(nextValue);
-              }}
-            >
-              <Box flexDirection="row">
-                <Radio value="new" my={1}>
-                  Produto novo
-                </Radio>
-                <Radio value="used" my={1} ml={4}>
-                  Produto usado
-                </Radio>
-              </Box>
-            </Radio.Group>
+
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  placeholder="Título do anúncio"
+                  onChangeText={onChange}
+                  value={value}
+                  errorMessage={errors.name?.message}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="description"
+              render={({ field: { onChange } }) => (
+                <TextArea
+                  placeholder="Descrição do produto"
+                  onChangeText={onChange}
+                  errorMessage={errors.description?.message}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="is_new"
+              render={({ field: { value, onChange } }) => (
+                <IsNewRadioContainer value={value} onChange={onChange} />
+              )}
+            />
           </VStack>
           <VStack>
             <Text my="4" fontFamily="heading" fontSize="md" color="gray.200">
               Venda
             </Text>
-            <Input
-              placeholder="Valor do produto"
-              InputLeftElement={
-                <Text ml="4" fontSize="md" fontFamily="heading">
-                  R$
-                </Text>
-              }
+            <Controller
+              control={control}
+              name="price"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  placeholder="Valor do produto"
+                  errorMessage={errors.price?.message}
+                  InputLeftElement={
+                    <Text ml="4" fontSize="md" fontFamily="heading">
+                      R$
+                    </Text>
+                  }
+                  keyboardType="numeric"
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
             />
             <VStack alignItems="flex-start">
               <Text fontFamily="heading" fontSize="sm" color="gray.200">
                 Aceita troca?
               </Text>
-              <Switch
-                offTrackColor="gray.500"
-                thumbColor="white"
-                onTrackColor="blue.500"
+
+              <Controller
+                control={control}
+                name="accept_trade"
+                render={({ field: { value, onChange } }) => (
+                  <Switch
+                    offTrackColor="gray.500"
+                    thumbColor="white"
+                    onTrackColor="blue.500"
+                    value={value}
+                    onValueChange={onChange}
+                  />
+                )}
               />
             </VStack>
             <Text fontFamily="heading" fontSize="sm" color="gray.200">
               Meios de pagamento aceitos
             </Text>
-            <Checkbox.Group
-              colorScheme="blue"
-              defaultValue={groupValue}
-              accessibilityLabel="pick an item"
-              mb={6}
-              onChange={values => {
-                setGroupValue(values || []);
-              }}
-            >
-              <Checkbox
-                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-                value="Boleto"
-                my="1"
-              >
-                Boleto
-              </Checkbox>
-              <Checkbox
-                value="Pix"
-                my="1"
-                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-              >
-                Pix
-              </Checkbox>
-              <Checkbox
-                value="Dinheiro"
-                my="1"
-                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-              >
-                Dinheiro
-              </Checkbox>
-              <Checkbox
-                value="Cartão de crédito"
-                my="1"
-                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-              >
-                Cartão de crédito
-              </Checkbox>
-              <Checkbox
-                value="Depósito Bancário"
-                my="1"
-                _checked={{ bg: 'blue.500', borderColor: 'blue.500' }}
-              >
-                Depósito Bancário
-              </Checkbox>
-            </Checkbox.Group>
+
+            <Controller
+              control={control}
+              name="payment_methods"
+              render={({ field: { value, onChange } }) => (
+                <PaymentMethodsCheckbox
+                  onChange={onChange}
+                  value={value}
+                  errorMessage={errors.payment_methods?.message}
+                />
+              )}
+            />
           </VStack>
         </ScrollView>
       </VStack>
@@ -189,7 +222,7 @@ export function CreateAd() {
           variant="primary"
           maxWidth={200}
           px={4}
-          onPress={handleGoToPreview}
+          onPress={handleSubmit(handlePreviewAd)}
         />
       </HStack>
     </>
