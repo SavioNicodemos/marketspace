@@ -72,7 +72,11 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
   };
 
   const handlePressArrowBackButton = () => {
-    navigation.goBack();
+    const routeList = navigation.getState().routes;
+    if (routeList[routeList.length - 2].name === 'adPreview') {
+      return navigation.popToTop();
+    }
+    return navigation.goBack();
   };
 
   const handleGoToEditAd = () => {
