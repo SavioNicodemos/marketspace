@@ -20,7 +20,6 @@ export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
       avatar: user.avatar,
       tel: user.tel,
     },
-    product_images: [],
   };
 
   const handleGoBack = () => {

@@ -2,13 +2,13 @@ import { HStack, View, Image, Center, Box, Text } from 'native-base';
 import Carousel from 'react-native-reanimated-carousel';
 import { useState } from 'react';
 import { Dimensions } from 'react-native';
-import { ImagesDTO } from '@dtos/ProductDTO';
+import { IImageUpload, ImagesDTO } from '@dtos/ProductDTO';
 import { api } from '@services/api';
 
 import noProduct from '@assets/noProduct.png';
 
 type Props = {
-  images: ImagesDTO[];
+  images: ImagesDTO[] | IImageUpload[];
   adIsDisabled?: boolean;
 };
 
@@ -42,7 +42,9 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
               source={
                 images.length
                   ? {
-                      uri: `${api.defaults.baseURL}/images/${item.path}`,
+                      uri: item.path
+                        ? `${api.defaults.baseURL}/images/${item.path}`
+                        : item.uri,
                     }
                   : noProduct
               }
@@ -75,7 +77,7 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
         <HStack space={1} bg="#0000005f" p="2" rounded="full">
           {images.map((item, index) => (
             <View
-              key={item.id}
+              key={Math.random()}
               h="2"
               w="2"
               bg={viewingImageIndex === index ? 'gray.700' : 'gray.300'}
