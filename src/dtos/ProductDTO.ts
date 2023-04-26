@@ -5,6 +5,12 @@ export type PaymentMethodsTypes =
   | 'cash'
   | 'deposit';
 
+export type IImageUpload = {
+  name: string;
+  uri: string;
+  type: string;
+};
+
 export type CreateProductDTO = {
   name: string;
   description: string;
@@ -12,6 +18,7 @@ export type CreateProductDTO = {
   price: string;
   accept_trade: boolean;
   payment_methods: PaymentMethodsTypes[];
+  product_images: IImageUpload[];
 };
 
 export type ShowAdDetailsDTO = Omit<CreateProductDTO, 'price'> & {
