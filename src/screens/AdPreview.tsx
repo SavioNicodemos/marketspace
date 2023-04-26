@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable camelcase */
-import { HStack, VStack, Text, Heading, Center } from 'native-base';
+import { HStack, VStack, Text, Heading, Center, useToast } from 'native-base';
 import { Platform } from 'react-native';
 import { Button } from '@components/Button';
 import { AdDetails } from '@components/AdDetails';
@@ -11,6 +12,7 @@ import { api } from '@services/api';
 export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
   const { product } = route.params;
   const { user } = useAuth();
+  const toast = useToast();
 
   const productPreview: ShowAdDetailsDTO = {
     ...product,
@@ -31,18 +33,49 @@ export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
   };
 
   const handleCreateAd = async () => {
-    const { name, description, is_new, accept_trade, payment_methods } =
-      product;
-    const response = await api.post('/products', {
-      name,
-      description,
-      is_new,
-      price: productPreview.price,
-      accept_trade,
-      payment_methods,
-    });
+    try {
+      const {
+        name,
+        description,
+        is_new,
+        accept_trade,
+        payment_methods,
+        product_images,
+      } = product;
+      const createAdResponse = await api.post('/products', {
+        name,
+        description,
+        is_new,
+        price: productPreview.price,
+        accept_trade,
+        payment_methods,
+      });
 
-    handleGoToAd(response.data.id);
+      const productId = createAdResponse.data.id;
+
+      const form = new FormData();
+      form.append('product_id', productId);
+      product_images.forEach((element: any) => {
+        form.append('images', element);
+      });
+
+      await api.post('/products/images', form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      toast.show({
+        title: 'Produto criado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+
+      handleGoToAd(productId);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(error);
+    }
   };
 
   return (
