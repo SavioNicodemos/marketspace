@@ -40,6 +40,11 @@ const createAdSchema = yup.object({
     .array()
     .min(1, 'Informe pelo menos um método de pagamento')
     .required('Informe pelo menos um método de pagamento'),
+
+  product_images: yup
+    .array()
+    .min(1, 'Adicione pelo menos uma foto do produto')
+    .required('Adicione pelo menos uma foto do produto'),
 });
 
 export function CreateAd() {
@@ -96,7 +101,11 @@ export function CreateAd() {
               control={control}
               name="product_images"
               render={({ field: { value, onChange } }) => (
-                <UploadPicturesContainer value={value} onChange={onChange} />
+                <UploadPicturesContainer
+                  value={value}
+                  onChange={onChange}
+                  errorMessage={errors.product_images?.message}
+                />
               )}
             />
           </VStack>
