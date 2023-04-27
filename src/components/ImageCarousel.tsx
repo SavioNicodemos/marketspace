@@ -42,9 +42,9 @@ export function ImageCarousel({ images, adIsDisabled }: Props) {
               source={
                 images.length
                   ? {
-                      uri: item.path
+                      uri: item.isExternal
                         ? `${api.defaults.baseURL}/images/${item.path}`
-                        : item.uri,
+                        : item.path,
                     }
                   : noProduct
               }
