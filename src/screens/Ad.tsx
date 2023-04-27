@@ -19,7 +19,16 @@ import Loading from '@components/Loading';
 
 const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
   const response = await api.get(`/products/${productId}`);
-  return response.data;
+  const responseData: ProductDTO = response.data;
+
+  const productData: ProductDTO = {
+    ...responseData,
+    product_images: responseData.product_images.map(image => ({
+      ...image,
+      isExternal: true,
+    })),
+  };
+  return productData;
 };
 
 const changeAdVisibility = async (

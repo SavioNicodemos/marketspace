@@ -8,6 +8,8 @@ export type PaymentMethodsTypes =
 export type IImageUpload = {
   name: string;
   uri: string;
+  path: string;
+  isExternal: boolean;
   type: string;
 };
 
@@ -40,6 +42,7 @@ export type IProductId = string;
 export type ImagesDTO = {
   id: string;
   path: string;
+  isExternal: boolean;
 };
 
 export type IPaymentMethodObject = {

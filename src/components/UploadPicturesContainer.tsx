@@ -1,5 +1,6 @@
 import { IImageUpload } from '@dtos/ProductDTO';
 import { Feather } from '@expo/vector-icons';
+import { api } from '@services/api';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import {
@@ -67,6 +68,8 @@ export function UploadPicturesContainer({
         const photoFile = {
           name: photoName,
           uri: photoSelected.assets[0].uri,
+          path: photoSelected.assets[0].uri,
+          isExternal: false,
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         };
 
@@ -96,7 +99,7 @@ export function UploadPicturesContainer({
       <HStack space={5}>
         {photos.length
           ? photos.map((photo, index) => (
-              <Box mt="4" mb="8" key={photo.uri}>
+              <Box mt="4" mb="8" key={photo.path}>
                 <IconButton
                   icon={
                     <Icon as={Feather} name="x" color="red.500" size="lg" />
@@ -116,7 +119,11 @@ export function UploadPicturesContainer({
                   rounded="lg"
                   bg="gray.500"
                   alt="Foto do produto"
-                  src={photo.uri}
+                  src={
+                    photo.isExternal
+                      ? `${api.defaults.baseURL}/images/${photo.path}`
+                      : photo.path
+                  }
                 />
               </Box>
             ))
