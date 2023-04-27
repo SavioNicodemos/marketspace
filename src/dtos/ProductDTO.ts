@@ -26,7 +26,6 @@ export type CreateProductDTO = {
 export type ShowAdDetailsDTO = Omit<CreateProductDTO, 'price'> & {
   price: number;
   user: User;
-  payment_methods: IPaymentMethodObject[] | PaymentMethodsTypes[];
   product_images: ImagesDTO[] | IImageUpload[];
 };
 
@@ -34,6 +33,9 @@ export type ProductDTO = ShowAdDetailsDTO & {
   id: string;
   user_id: string;
   is_active: boolean;
+};
+
+export type ProductApiDTO = Omit<ProductDTO, 'payment_methods'> & {
   payment_methods: IPaymentMethodObject[];
 };
 

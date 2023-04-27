@@ -1,6 +1,5 @@
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
 import {
   HStack,
   VStack,
@@ -10,6 +9,7 @@ import {
   Switch,
   ScrollView,
   IconButton,
+  useToast,
 } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -17,11 +17,12 @@ import * as yup from 'yup';
 import { Input } from '@components/Input';
 import { TextArea } from '@components/TextArea';
 import { Button } from '@components/Button';
-import { INavigationRoutes } from '@dtos/RoutesDTO';
+import { ICreateAdRoutes } from '@dtos/RoutesDTO';
 import { CreateProductDTO } from '@dtos/ProductDTO';
 import { IsNewRadioContainer } from '@components/IsNewRadioContainer';
 import { PaymentMethodsCheckbox } from '@components/PaymentMethodsCheckbox';
 import { UploadPicturesContainer } from '@components/UploadPicturesContainer';
+import { api } from '@services/api';
 
 const createAdSchema = yup.object({
   name: yup.string().required('Informe o nome do produto'),
@@ -47,14 +48,29 @@ const createAdSchema = yup.object({
     .required('Adicione pelo menos uma foto do produto'),
 });
 
-export function CreateAd() {
-  const navigation = useNavigation<INavigationRoutes['navigation']>();
+export function CreateAd({ navigation, route }: ICreateAdRoutes) {
+  const toast = useToast();
+
+  const { product } = route.params;
+
+  const isEditView = !!product;
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateProductDTO>({
-    defaultValues: { is_new: true, accept_trade: true },
+    defaultValues: isEditView
+      ? {
+          is_new: product.is_new,
+          accept_trade: product.accept_trade,
+          name: product.name,
+          description: product.description,
+          price: String(product.price / 100),
+          payment_methods: product.payment_methods,
+          product_images: product.product_images,
+        }
+      : { is_new: true, accept_trade: true },
     resolver: yupResolver(createAdSchema),
   });
 
@@ -66,8 +82,27 @@ export function CreateAd() {
     navigation.navigate('adPreview', { product: data });
   };
 
-  const handlePreviewAd = (data: CreateProductDTO) => {
-    handleGoToPreview(data);
+  const handleSuccessPress = (data: CreateProductDTO) => {
+    if (!isEditView) {
+      handleGoToPreview(data);
+      return;
+    }
+
+    try {
+      // eslint-disable-next-line no-param-reassign
+      data.price = (Number(data.price) * 100) as unknown as string;
+      api.put(`/products/${product.id}`, data);
+
+      toast.show({
+        title: 'Anúncio atualizado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+
+      navigation.navigate('ad', { productId: product.id, isMyAd: true });
+    } catch (error) {
+      console.warn(error);
+    }
   };
 
   return (
@@ -83,7 +118,7 @@ export function CreateAd() {
           />
 
           <Heading fontSize="lg" color="gray.100" ml={-5}>
-            Meus anúncios
+            {isEditView ? 'Editar anúncio' : 'Criar anúncio'}
           </Heading>
           <VStack />
         </HStack>
@@ -130,9 +165,10 @@ export function CreateAd() {
             <Controller
               control={control}
               name="description"
-              render={({ field: { onChange } }) => (
+              render={({ field: { value, onChange } }) => (
                 <TextArea
                   placeholder="Descrição do produto"
+                  value={value}
                   onChangeText={onChange}
                   errorMessage={errors.description?.message}
                 />
@@ -223,11 +259,11 @@ export function CreateAd() {
           onPress={handleGoBack}
         />
         <Button
-          title="Avançar"
+          title={isEditView ? 'Salvar Alterações' : 'Avançar'}
           variant="primary"
           maxWidth={200}
           px={4}
-          onPress={handleSubmit(handlePreviewAd)}
+          onPress={handleSubmit(handleSuccessPress)}
         />
       </HStack>
     </>

@@ -14,12 +14,14 @@ import { AdDetails } from '@components/AdDetails';
 import { IAdDetailsRoutes } from '@dtos/RoutesDTO';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@services/api';
-import { IProductId, ProductDTO } from '@dtos/ProductDTO';
+import { IProductId, ProductApiDTO, ProductDTO } from '@dtos/ProductDTO';
 import Loading from '@components/Loading';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
   const response = await api.get(`/products/${productId}`);
-  const responseData: ProductDTO = response.data;
+  const responseData: ProductApiDTO = response.data;
 
   const productData: ProductDTO = {
     ...responseData,
@@ -27,6 +29,7 @@ const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
       ...image,
       isExternal: true,
     })),
+    payment_methods: responseData.payment_methods.map(item => item.key),
   };
   return productData;
 };
@@ -54,6 +57,7 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
   } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => getProduct(productId),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.show({
         description: `Algo deu errado: ${error?.message}`,
@@ -91,6 +95,13 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
   const handleGoToEditAd = () => {
     navigation.navigate('createAd', { product });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   if (isError) {
     return <Heading>Sorry, something went wrong! try again later</Heading>;
