@@ -18,3 +18,8 @@ export type IAdPreviewRoutes = CompositeScreenProps<
   NativeStackScreenProps<MainNavRoutes, 'adPreview'>,
   BottomTabScreenProps<BottomTabRoutes>
 >;
+
+export type ICreateAdRoutes = CompositeScreenProps<
+  NativeStackScreenProps<MainNavRoutes, 'createAd'>,
+  BottomTabScreenProps<BottomTabRoutes>
+>;

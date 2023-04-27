@@ -80,7 +80,7 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
   };
 
   const handleGoToEditAd = () => {
-    navigation.navigate('createAd');
+    navigation.navigate('createAd', { product });
   };
 
   if (isError) {

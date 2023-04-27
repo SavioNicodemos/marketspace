@@ -75,7 +75,7 @@ export function Home() {
     : 0;
 
   const handleGoToCreateAdd = () => {
-    navigation.navigate('createAd');
+    navigation.navigate('createAd', {});
   };
 
   const handleGoToMyAds = () => {

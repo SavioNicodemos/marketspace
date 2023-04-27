@@ -7,12 +7,14 @@ import { CreateAd } from '@screens/CreateAd';
 import { Ad } from '@screens/Ad';
 import { AdPreview } from '@screens/AdPreview';
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { CreateProductDTO, IProductId } from '@dtos/ProductDTO';
+import { CreateProductDTO, IProductId, ProductDTO } from '@dtos/ProductDTO';
 import { HomeRoutes, BottomTabRoutes } from './home.routes';
 
 export type MainNavRoutes = {
   MainNav: NavigatorScreenParams<BottomTabRoutes>;
-  createAd: undefined;
+  createAd: {
+    product?: ProductDTO;
+  };
   ad: { productId: IProductId; isMyAd: boolean };
   adPreview: { product: CreateProductDTO };
 };
