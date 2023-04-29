@@ -1,19 +1,12 @@
-import {
-  ScrollView,
-  VStack,
-  Center,
-  Text,
-  Heading,
-  useToast,
-} from 'native-base';
+import { ScrollView, VStack, Center, Text, Heading } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
-import { AppError } from '@utils/AppError';
 import { useAuth } from '@hooks/useAuth';
+import { handleError } from '@utils/handleError';
 
 type FormData = {
   email: string;
@@ -21,7 +14,6 @@ type FormData = {
 };
 
 export function SignIn() {
-  const toast = useToast();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const { singIn } = useAuth();
   const {
@@ -34,17 +26,7 @@ export function SignIn() {
     try {
       await singIn(email, password);
     } catch (error) {
-      const isAppError = error instanceof AppError;
-
-      const title = isAppError
-        ? error.message
-        : 'Não foi possível entrar. Tente novamente mais tarde.';
-
-      toast.show({
-        title,
-        placement: 'top',
-        bgColor: 'red.500',
-      });
+      handleError(error);
     }
   }
 

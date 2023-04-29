@@ -8,6 +8,7 @@ import { IAdPreviewRoutes } from '@dtos/RoutesDTO';
 import { ShowAdDetailsDTO } from '@dtos/ProductDTO';
 import { useAuth } from '@hooks/useAuth';
 import { api } from '@services/api';
+import { handleError } from '@utils/handleError';
 
 export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
   const { product } = route.params;
@@ -73,8 +74,7 @@ export function AdPreview({ navigation, route }: IAdPreviewRoutes) {
 
       handleGoToAd(productId);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error);
+      handleError(error);
     }
   };
 

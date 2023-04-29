@@ -24,6 +24,7 @@ import { PaymentMethodsCheckbox } from '@components/PaymentMethodsCheckbox';
 import { UploadPicturesContainer } from '@components/UploadPicturesContainer';
 import { api } from '@services/api';
 import { findDeletedObjects } from '@utils/helpers/arrayHelper';
+import { handleError } from '@utils/handleError';
 
 const createAdSchema = yup.object({
   name: yup.string().required('Informe o nome do produto'),
@@ -138,7 +139,7 @@ export function CreateAd({ navigation, route }: ICreateAdRoutes) {
 
       navigation.navigate('ad', { productId: product.id, isMyAd: true });
     } catch (error) {
-      console.warn(error);
+      handleError(error);
     }
   };
 
