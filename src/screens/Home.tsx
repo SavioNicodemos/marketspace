@@ -23,6 +23,7 @@ import { api } from '@services/api';
 import Loading from '@components/Loading';
 import { useAuth } from '@hooks/useAuth';
 import { IFiltersDTO } from '@dtos/FiltersDTO';
+import { handleError } from '@utils/handleError';
 
 const getAds = async (filters: IFiltersDTO): Promise<ProductDTO[]> => {
   const params = new URLSearchParams();
@@ -63,11 +64,17 @@ export function Home() {
   const { data: productList, isLoading } = useQuery({
     queryKey: ['ads', filters],
     queryFn: () => getAds(filters),
+    onError: error => {
+      handleError(error);
+    },
   });
 
   const { data: myAds } = useQuery({
     queryKey: ['myAds'],
     queryFn: () => getMyAds(),
+    onError: error => {
+      handleError(error);
+    },
   });
 
   const myActiveProductsCount = myAds

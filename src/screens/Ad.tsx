@@ -18,6 +18,7 @@ import { IProductId, ProductApiDTO, ProductDTO } from '@dtos/ProductDTO';
 import Loading from '@components/Loading';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
+import { handleError } from '@utils/handleError';
 
 const getProduct = async (productId: IProductId): Promise<ProductDTO> => {
   const response = await api.get(`/products/${productId}`);
@@ -38,11 +39,16 @@ const changeAdVisibility = async (
   productId: IProductId,
   productActualStatus: boolean,
 ) => {
-  const response = await api.patch(`/products/${productId}`, {
-    is_active: !productActualStatus,
-  });
+  try {
+    const response = await api.patch(`/products/${productId}`, {
+      is_active: !productActualStatus,
+    });
 
-  return response.data.is_active;
+    return response.data.is_active;
+  } catch (error) {
+    handleError(error);
+    return productActualStatus;
+  }
 };
 
 export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
@@ -58,11 +64,7 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
     queryKey: ['product', productId],
     queryFn: () => getProduct(productId),
     onError: (error: any) => {
-      toast.show({
-        description: `Algo deu errado: ${error?.message}`,
-        placement: 'top',
-        color: 'red.200',
-      });
+      handleError(error);
       navigation.goBack();
     },
   });

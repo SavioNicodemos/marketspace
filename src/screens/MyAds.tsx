@@ -18,6 +18,7 @@ import { IProductId, ProductDTO } from '@dtos/ProductDTO';
 import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
+import { handleError } from '@utils/handleError';
 
 const getMyAds = async (): Promise<ProductDTO[]> => {
   const response = await api.get('/users/products');
@@ -36,6 +37,9 @@ export function MyAds() {
   } = useQuery({
     queryKey: ['myAds'],
     queryFn: () => getMyAds(),
+    onError: error => {
+      handleError(error);
+    },
   });
 
   const handleGoToAdDetails = (productId: IProductId) => {
