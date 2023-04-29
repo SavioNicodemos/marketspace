@@ -6,6 +6,7 @@ export type PaymentMethodsTypes =
   | 'deposit';
 
 export type IImageUpload = {
+  id?: string;
   name: string;
   uri: string;
   path: string;

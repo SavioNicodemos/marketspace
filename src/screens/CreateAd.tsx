@@ -18,11 +18,12 @@ import { Input } from '@components/Input';
 import { TextArea } from '@components/TextArea';
 import { Button } from '@components/Button';
 import { ICreateAdRoutes } from '@dtos/RoutesDTO';
-import { CreateProductDTO } from '@dtos/ProductDTO';
+import { CreateProductDTO, IImageUpload } from '@dtos/ProductDTO';
 import { IsNewRadioContainer } from '@components/IsNewRadioContainer';
 import { PaymentMethodsCheckbox } from '@components/PaymentMethodsCheckbox';
 import { UploadPicturesContainer } from '@components/UploadPicturesContainer';
 import { api } from '@services/api';
+import { findDeletedObjects } from '@utils/helpers/arrayHelper';
 
 const createAdSchema = yup.object({
   name: yup.string().required('Informe o nome do produto'),
@@ -55,6 +56,8 @@ export function CreateAd({ navigation, route }: ICreateAdRoutes) {
 
   const isEditView = !!product;
 
+  const initialPhotos = product?.product_images;
+
   const {
     control,
     handleSubmit,
@@ -82,16 +85,50 @@ export function CreateAd({ navigation, route }: ICreateAdRoutes) {
     navigation.navigate('adPreview', { product: data });
   };
 
-  const handleSuccessPress = (data: CreateProductDTO) => {
+  const handleSuccessPress = async (data: CreateProductDTO) => {
     if (!isEditView) {
       handleGoToPreview(data);
       return;
     }
 
+    const deletedPhotos = findDeletedObjects(
+      initialPhotos as IImageUpload[],
+      data.product_images,
+      'path',
+    );
+    const deletedPhotosIds = deletedPhotos.map(image => image.id);
+
+    const newPhotosToAdd = data.product_images.filter(
+      image => image.isExternal === false,
+    );
+
     try {
       // eslint-disable-next-line no-param-reassign
       data.price = (Number(data.price) * 100) as unknown as string;
-      api.put(`/products/${product.id}`, data);
+      await api.put(`/products/${product.id}`, data);
+
+      if (newPhotosToAdd.length) {
+        const imagesForm = new FormData();
+        imagesForm.append('product_id', product.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        newPhotosToAdd.forEach((element: any) => {
+          imagesForm.append('images', element);
+        });
+
+        await api.post('/products/images', imagesForm, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      }
+
+      if (deletedPhotosIds.length) {
+        await api.delete('/products/images', {
+          data: {
+            productImagesIds: deletedPhotosIds,
+          },
+        });
+      }
 
       toast.show({
         title: 'Anúncio atualizado com sucesso!',
