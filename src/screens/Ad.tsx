@@ -57,7 +57,6 @@ export function Ad({ navigation, route }: IAdDetailsRoutes): JSX.Element {
   } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => getProduct(productId),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.show({
         description: `Algo deu errado: ${error?.message}`,

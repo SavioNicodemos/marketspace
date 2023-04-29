@@ -111,7 +111,6 @@ export function CreateAd({ navigation, route }: ICreateAdRoutes) {
       if (newPhotosToAdd.length) {
         const imagesForm = new FormData();
         imagesForm.append('product_id', product.id);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         newPhotosToAdd.forEach((element: any) => {
           imagesForm.append('images', element);
         });

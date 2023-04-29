@@ -22,9 +22,7 @@ export function Input({
   errorMessage = null,
   isInvalid,
   searchBar = false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSearchPress = () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onFilterPress = () => {},
   ...rest
 }: Props) {
