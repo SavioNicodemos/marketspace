@@ -1,3 +1,6 @@
+import { Feather } from '@expo/vector-icons';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigation } from '@react-navigation/native';
 import {
   ScrollView,
   VStack,
@@ -8,19 +11,67 @@ import {
   Icon,
   IconButton,
 } from 'native-base';
-import { Feather } from '@expo/vector-icons';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { UserPhoto } from '@components/UserPhoto';
-
-import defaultImage from '@assets/defaultAvatar.png';
-import { useNavigation } from '@react-navigation/native';
+import { ICreateUser } from '@dtos/UserDTO';
 
 const PHOTO_SIZE = 24;
 
+const createUserSchema = yup.object({
+  name: yup.string().required('Informe o nome de usuário'),
+
+  email: yup
+    .string()
+    .email('Formato de e-mail errado')
+    .required('Informe um email'),
+
+  tel: yup
+    .number()
+    .typeError('Please enter only numeric values')
+    .nullable()
+    .required('Informe um telefone')
+    .min(0),
+
+  password: yup
+    .string()
+    .min(6, 'A senha deve ter pelo menos 6 dígitos.')
+    .transform(value => value || null)
+    .required('Informe uma senha'),
+
+  confirm_password: yup
+    .string()
+    .nullable()
+    .transform(value => value || null)
+    .oneOf([yup.ref('password')], 'A confirmação de senha não confere.')
+    .when('password', {
+      is: (Field: any) => Field,
+      then: schema =>
+        schema
+          .nullable()
+          .required('Informe a confirmação da senha.')
+          .transform(value => value || null),
+    }),
+});
+
 export function SignUp() {
   const navigation = useNavigation();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ICreateUser>({
+    resolver: yupResolver(createUserSchema),
+  });
+
+  const handleCreateUser = (data: ICreateUser) => {
+    console.log(data);
+  };
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -55,7 +106,7 @@ export function SignUp() {
             width={PHOTO_SIZE}
             height={PHOTO_SIZE}
           >
-            <UserPhoto size={PHOTO_SIZE} source={defaultImage} />
+            <UserPhoto size={PHOTO_SIZE} imageLink="" />
             <IconButton
               position="absolute"
               bottom="-5"
@@ -70,13 +121,83 @@ export function SignUp() {
           </Box>
         </Center>
 
-        <Input placeholder="Nome" isInvalid={false} mt={4} />
-        <Input placeholder="E-mail" isInvalid={false} />
-        <Input placeholder="Telefone" isInvalid={false} />
-        <Input placeholder="Senha" isInvalid={false} />
-        <Input placeholder="Confirmar senha" isInvalid={false} />
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder="Nome"
+              isInvalid={false}
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.name?.message}
+              mt={4}
+            />
+          )}
+        />
 
-        <Button title="Criar" variant="primary" mt="4" />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder="E-mail"
+              isInvalid={false}
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.email?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="tel"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder="Telefone"
+              isInvalid={false}
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.tel?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder="Senha"
+              secureTextEntry
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.password?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="confirm_password"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder="Confirmar senha"
+              secureTextEntry
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.confirm_password?.message}
+            />
+          )}
+        />
+
+        <Button
+          title="Criar"
+          variant="primary"
+          mt="4"
+          onPress={handleSubmit(handleCreateUser)}
+        />
 
         <Text color="gray.200" fontSize="sm" mt={12} textAlign="center">
           Já tem uma conta?
