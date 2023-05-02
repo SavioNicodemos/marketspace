@@ -85,7 +85,12 @@ export function AdCard({
           </Box>
         ) : null}
       </VStack>
-      <Text color={adIsDisabled ? 'gray.400' : 'gray.200'} fontSize="sm">
+      <Text
+        color={adIsDisabled ? 'gray.400' : 'gray.200'}
+        fontSize="sm"
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
         {name}
       </Text>
       <Text
