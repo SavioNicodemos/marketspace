@@ -24,6 +24,7 @@ import Loading from '@components/Loading';
 import { useAuth } from '@hooks/useAuth';
 import { IFiltersDTO } from '@dtos/FiltersDTO';
 import { handleError } from '@utils/handleError';
+import { EmptyListText } from '@components/EmptyListText';
 
 const getAds = async (filters: IFiltersDTO): Promise<ProductDTO[]> => {
   const params = new URLSearchParams();
@@ -178,10 +179,14 @@ export function Home() {
             data={productList}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'space-between',
-            }}
+            contentContainerStyle={
+              productList?.length
+                ? {
+                    flexGrow: 1,
+                    justifyContent: 'space-between',
+                  }
+                : { flex: 1, justifyContent: 'center' }
+            }
             renderItem={({ item }) => (
               <AdCard
                 name={item.name}
@@ -192,6 +197,9 @@ export function Home() {
                 onPress={() => handleGoToAdDetails(item.id)}
               />
             )}
+            ListEmptyComponent={
+              <EmptyListText title="Ainda não há nenhum anúncio criado! Seja o primeiro!" />
+            }
             numColumns={2}
           />
         )}

@@ -19,6 +19,7 @@ import { INavigationRoutes } from '@dtos/RoutesDTO';
 import { api } from '@services/api';
 import Loading from '@components/Loading';
 import { handleError } from '@utils/handleError';
+import { EmptyListText } from '@components/EmptyListText';
 
 const getMyAds = async (): Promise<ProductDTO[]> => {
   const response = await api.get('/users/products');
@@ -40,6 +41,7 @@ export function MyAds() {
     onError: error => {
       handleError(error);
     },
+    initialData: [],
   });
 
   const handleGoToAdDetails = (productId: IProductId) => {
@@ -99,9 +101,13 @@ export function MyAds() {
           <FlatList
             data={myAds}
             keyExtractor={item => item.id}
-            contentContainerStyle={{
-              justifyContent: 'space-between',
-            }}
+            contentContainerStyle={
+              myAds.length
+                ? {
+                    justifyContent: 'space-between',
+                  }
+                : { flex: 1, justifyContent: 'center' }
+            }
             renderItem={({ item }) => (
               <AdCard
                 name={item.name}
@@ -113,6 +119,9 @@ export function MyAds() {
               />
             )}
             numColumns={2}
+            ListEmptyComponent={
+              <EmptyListText title="Não há nenhum anúncio seu criado ainda! Vamos anunciar hoje?" />
+            }
           />
         </>
       )}
