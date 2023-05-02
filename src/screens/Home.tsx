@@ -96,13 +96,22 @@ export function Home() {
   return (
     <>
       <VStack bgColor="gray.600" flex={1} pt={16} px={6}>
-        <HStack justifyContent="center">
-          <UserPhoto size={12} mr={2} imageLink={user.avatar} />
-          <VStack>
-            <Text fontSize="md">Boas vindas,</Text>
-            <Heading fontSize="md">{user.name}</Heading>
-          </VStack>
-          <Box flex={1} pl={12}>
+        <HStack justifyContent="space-between">
+          <HStack flexShrink={1}>
+            <UserPhoto size={12} mr={2} imageLink={user.avatar} />
+            <VStack flexShrink={1}>
+              <Text fontSize="md">Boas vindas,</Text>
+              <Heading
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                fontSize="md"
+                fontFamily="heading"
+              >
+                {user.name}
+              </Heading>
+            </VStack>
+          </HStack>
+          <Box flex={1} minW={150} maxW={150}>
             <Button
               title="Criar anúncio"
               icon="plus"
@@ -160,31 +169,32 @@ export function Home() {
               setFilters(prev => ({ ...prev, productName: value }))
             }
           />
-
-          {isLoading ? (
-            <Loading backgroundStyle="appDefault" />
-          ) : (
-            <FlatList
-              data={productList}
-              keyExtractor={item => item.id}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-between',
-              }}
-              renderItem={({ item }) => (
-                <AdCard
-                  name={item.name}
-                  isNew={item.is_new}
-                  price={item.price}
-                  userPhoto={item.user.avatar}
-                  productImage={item.product_images[0]?.path}
-                  onPress={() => handleGoToAdDetails(item.id)}
-                />
-              )}
-              numColumns={2}
-            />
-          )}
         </VStack>
+
+        {isLoading ? (
+          <Loading backgroundStyle="appDefault" />
+        ) : (
+          <FlatList
+            data={productList}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => item.id}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'space-between',
+            }}
+            renderItem={({ item }) => (
+              <AdCard
+                name={item.name}
+                isNew={item.is_new}
+                price={item.price}
+                userPhoto={item.user.avatar}
+                productImage={item.product_images[0]?.path}
+                onPress={() => handleGoToAdDetails(item.id)}
+              />
+            )}
+            numColumns={2}
+          />
+        )}
       </VStack>
       <FiltersModal
         visible={isFiltersModalOpen}
