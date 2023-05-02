@@ -1,3 +1,5 @@
+import { IImageUpload } from './ProductDTO';
+
 export type UserDTO = {
   id: string;
   name: string;
@@ -7,7 +9,7 @@ export type UserDTO = {
 };
 
 export type ICreateUser = {
-  avatar: Blob;
+  avatar: IImageUpload;
   name: string;
   email: string;
   tel: string;

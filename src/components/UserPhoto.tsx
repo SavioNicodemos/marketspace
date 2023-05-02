@@ -4,6 +4,7 @@ import { ColorType } from 'native-base/lib/typescript/components/types';
 import defaultUserImage from '@assets/defaultAvatar.png';
 
 type Props = IImageProps & {
+  isExternalImage?: boolean;
   size: number;
   borderWidth?: number;
   borderColor?: ColorType;
@@ -11,12 +12,17 @@ type Props = IImageProps & {
 };
 
 export function UserPhoto({
+  isExternalImage = true,
   size,
   borderWidth = 3,
   borderColor = 'blue.500',
   imageLink,
   ...rest
 }: Props) {
+  const imagePath = isExternalImage
+    ? `${api.defaults.baseURL}/images/${imageLink}`
+    : imageLink;
+
   return (
     <Image
       w={size}
@@ -25,11 +31,7 @@ export function UserPhoto({
       borderWidth={borderWidth}
       borderColor={borderColor}
       alt="Foto de perfil do usuário"
-      source={
-        imageLink
-          ? { uri: `${api.defaults.baseURL}/images/${imageLink}` }
-          : defaultUserImage
-      }
+      source={imageLink ? { uri: imagePath } : defaultUserImage}
       {...rest}
     />
   );

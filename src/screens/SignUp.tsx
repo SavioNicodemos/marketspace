@@ -1,28 +1,18 @@
-import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
-import {
-  ScrollView,
-  VStack,
-  Center,
-  Text,
-  Heading,
-  Box,
-  Icon,
-  IconButton,
-} from 'native-base';
+import { ScrollView, VStack, Center, Text, Heading } from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import Logo from '@assets/Logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
-import { UserPhoto } from '@components/UserPhoto';
 import { ICreateUser } from '@dtos/UserDTO';
-
-const PHOTO_SIZE = 24;
+import { AvatarUpload } from '@components/AvatarUpload';
 
 const createUserSchema = yup.object({
+  avatar: yup.mixed().required('É necessário escolher uma foto de perfil'),
+
   name: yup.string().required('Informe o nome de usuário'),
 
   email: yup
@@ -100,25 +90,19 @@ export function SignUp() {
             seus produtos
           </Text>
 
-          <Box
-            alignItems="center"
-            mt="4"
-            width={PHOTO_SIZE}
-            height={PHOTO_SIZE}
-          >
-            <UserPhoto size={PHOTO_SIZE} imageLink="" />
-            <IconButton
-              position="absolute"
-              bottom="-5"
-              right="-5"
-              bg="blue.500"
-              icon={<Icon as={Feather} name="edit-3" size="6" />}
-              _icon={{
-                color: 'white',
-              }}
-              borderRadius="full"
+          <Center>
+            <Controller
+              control={control}
+              name="avatar"
+              render={({ field: { value, onChange } }) => (
+                <AvatarUpload
+                  value={value}
+                  onChange={onChange}
+                  errorMessage={errors.avatar?.message}
+                />
+              )}
             />
-          </Box>
+          </Center>
         </Center>
 
         <Controller
