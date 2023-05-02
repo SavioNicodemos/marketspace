@@ -1,6 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, VStack, Center, Text, Heading } from 'native-base';
+import {
+  ScrollView,
+  VStack,
+  Center,
+  Text,
+  Heading,
+  useToast,
+} from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -9,6 +16,8 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { ICreateUser } from '@dtos/UserDTO';
 import { AvatarUpload } from '@components/AvatarUpload';
+import { api } from '@services/api';
+import { handleError } from '@utils/handleError';
 
 const createUserSchema = yup.object({
   avatar: yup.mixed().required('É necessário escolher uma foto de perfil'),
@@ -51,6 +60,8 @@ const createUserSchema = yup.object({
 export function SignUp() {
   const navigation = useNavigation();
 
+  const toast = useToast();
+
   const {
     control,
     handleSubmit,
@@ -59,12 +70,33 @@ export function SignUp() {
     resolver: yupResolver(createUserSchema),
   });
 
-  const handleCreateUser = (data: ICreateUser) => {
-    console.log(data);
-  };
-
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  const handleCreateUser = async (data: ICreateUser) => {
+    try {
+      const formData = new FormData();
+      formData.append('avatar', data.avatar as any);
+      formData.append('name', data.name);
+      formData.append('email', data.email);
+      formData.append('tel', data.tel);
+      formData.append('password', data.password);
+
+      await api.post('/users', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.show({
+        title: 'Usuário criado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+      handleGoBack();
+    } catch (error: any) {
+      handleError(error);
+    }
   };
 
   return (
