@@ -13,9 +13,7 @@ export const chooseIfNewOrUsedIsBooleanOrNull = (
     if (!isEnabled && isNewValue === null) {
       return false;
     }
-    if (!isEnabled && isNewValue === true) {
-      return null;
-    }
+    return null;
   }
   if (type === 'used') {
     if (isEnabled && isNewValue === null) {
@@ -27,9 +25,7 @@ export const chooseIfNewOrUsedIsBooleanOrNull = (
     if (!isEnabled && isNewValue === null) {
       return true;
     }
-    if (!isEnabled && isNewValue === false) {
-      return null;
-    }
+    return null;
   }
   return null;
 };
