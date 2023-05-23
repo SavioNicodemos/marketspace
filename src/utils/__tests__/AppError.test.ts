@@ -1,4 +1,4 @@
-import { AppError } from './AppError'; // replace with your actual filename
+import { AppError } from '../AppError';
 
 describe('AppError', () => {
   it('should correctly assign a message on instantiation', () => {

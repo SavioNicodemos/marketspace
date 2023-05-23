@@ -1,6 +1,6 @@
 import { Toast } from 'native-base';
-import { AppError } from './AppError';
-import { handleError } from './handleError'; // replace with your actual filename
+import { AppError } from '../AppError';
+import { handleError } from '../handleError';
 
 jest.mock('native-base', () => ({
   Toast: {

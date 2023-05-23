@@ -4,8 +4,8 @@ import {
   storageUserSave,
   storageUserGet,
   storageUserRemove,
-} from './storageUser';
-import { USER_STORAGE } from './storageConfig';
+} from '../storageUser';
+import { USER_STORAGE } from '../storageConfig';
 
 // Mock the LocalStorage module
 jest.mock('@storage/localStorage', () => {

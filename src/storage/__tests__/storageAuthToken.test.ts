@@ -5,7 +5,7 @@ import {
   storageAuthTokenSave,
   storageAuthTokenGet,
   storageAuthTokenRemove,
-} from './storageAuthToken';
+} from '../storageAuthToken';
 
 jest.mock('@storage/localStorage', () => {
   return {

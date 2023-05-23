@@ -1,4 +1,4 @@
-import { chooseIfNewOrUsedIsBooleanOrNull } from './conditions'; // replace with your actual filename
+import { chooseIfNewOrUsedIsBooleanOrNull } from '../conditions';
 
 describe('chooseIfNewOrUsedIsBooleanOrNull', () => {
   it.each<
