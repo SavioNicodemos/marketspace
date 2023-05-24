@@ -20,7 +20,10 @@ export function UserPhoto({
   ...rest
 }: Props) {
   const imagePath = isExternalImage
-    ? `${api.defaults.baseURL}/images/${imageLink}`
+    ? `${api.defaults.baseURL?.replace(
+        '/api/v1',
+        '',
+      )}/storage/avatars/${imageLink}`
     : imageLink;
 
   return (

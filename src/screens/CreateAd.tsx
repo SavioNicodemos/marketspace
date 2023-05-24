@@ -112,7 +112,7 @@ export function CreateAd({ navigation, route }: ICreateAdRoutes) {
         const imagesForm = new FormData();
         imagesForm.append('product_id', product.id);
         newPhotosToAdd.forEach((element: any) => {
-          imagesForm.append('images', element);
+          imagesForm.append('images[]', element);
         });
 
         await api.post('/products/images', imagesForm, {
