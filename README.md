@@ -1,7 +1,7 @@
 # Welcome to Marketspace (In Development)
 This is a React Native + Expo app that is currently in development. It aims to be a marketplace where users can buy and sell used or new items.
 The app will provide features such as user authentication, item listings, user profiles, favorites, image upload, categories, and search. Stay 
-tuned for further updates as the development progresses.
+tuned for further updates as the development progresses. (User journey GIF's soon)
 
 ## Technologies Used
 - React Native
